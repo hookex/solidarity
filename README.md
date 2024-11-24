@@ -1,5 +1,8 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+# Deploy
+https://vercel.com/cookmycode-gmailcoms-projects/solidarity
+
 ## Getting Started
 
 First, run the development server:
