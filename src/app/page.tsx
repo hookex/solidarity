@@ -4,6 +4,7 @@ import Image from "next/image";
 import {useEffect, useState} from "react";
 import {useSpring, animated} from '@react-spring/web';
 import FullScreenLayout from "@/app/components/full-screen-layout";
+import Snowfall from "@/app/components/snow-fall";
 
 export default function Home() {
     const [message, setMessage] = useState('');
@@ -35,6 +36,7 @@ export default function Home() {
 
     return (
         <FullScreenLayout>
+            <Snowfall/>
             <h1 style={{fontSize: '88px'}}>Hello
                 <animated.div style={styles}>
                     <div>Hooke!</div>
