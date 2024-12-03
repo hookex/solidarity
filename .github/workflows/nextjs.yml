@@ -33,7 +33,7 @@ jobs:
 
       # 将文件上传到服务器
       - name: Deploy to ECS server
-        uses: appleboy/scp-action@v0.2.1
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.ECS_HOST }}
           username: ${{ secrets.ECS_USER }}
