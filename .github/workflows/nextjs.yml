@@ -37,7 +37,7 @@ jobs:
         with:
           host: ${{ secrets.ECS_HOST }}
           username: ${{ secrets.ECS_USER }}
-          key: ${{ secrets.ECS_PRIVATE_KEY }}
+          password: ${{ secrets.ECS_PASSWORD }}
           source: solidarity-app.zip
           target: /var/www/solidarity/
 
