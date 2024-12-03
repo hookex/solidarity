@@ -1,0 +1,55 @@
+name: Deploy Solidarity App to ECS
+
+on:
+  push:
+    branches:
+      - main  # 仅当推送到 main 分支时触发
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 检出代码
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # 设置 Node.js 环境
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '22' # 使用 Node.js 22
+
+      # 安装依赖并构建应用
+      - name: Install dependencies and build
+        run: |
+          npm install
+          npm run build
+          npm install --production # 仅保留生产依赖
+
+      # 压缩构建文件
+      - name: Archive build files
+        run: zip -r solidarity-app.zip . -x node_modules/\* .git/\*
+
+      # 将文件上传到服务器
+      - name: Deploy to ECS server
+        uses: appleboy/scp-action@v0.2.1
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
+          key: ${{ secrets.ECS_PRIVATE_KEY }}
+          source: solidarity-app.zip
+          target: /var/www/solidarity/
+
+      # 在服务器上解压并启动服务
+      - name: Execute remote commands
+        uses: appleboy/ssh-action@v0.1.3
+        with:
+          host: ${{ secrets.ECS_HOST }}
+          username: ${{ secrets.ECS_USER }}
+          key: ${{ secrets.ECS_PRIVATE_KEY }}
+          script: |
+            cd /var/www/solidarity
+            unzip -o solidarity-app.zip
+            npm install --production
+            pm2 restart solidarity || pm2 start npm --name "solidarity" -- start
