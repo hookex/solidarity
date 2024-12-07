@@ -30,9 +30,8 @@ jobs:
       # 安装依赖并构建应用
       - name: Install dependencies and build
         run: |
-          npm install
+          npm ci
           npm run build
-          npm install --production # 仅保留生产依赖
       # 压缩构建文件
       - name: Archive build files
         run: zip -r solidarity-app.zip . -x node_modules/\* .git/\*
