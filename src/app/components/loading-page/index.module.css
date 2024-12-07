@@ -1,0 +1,56 @@
+@import url('https://fonts.googleapis.com/css2?family=Jacquard+12+Charted&family=Rubik+Distressed&display=swap');
+
+/* index.module.css */
+.container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    width: 100vw;
+    background-color: var(--primary-green-color);
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: 9999;
+    flex-direction: column; /* 使loader和文本在垂直方向排列 */
+    text-align: center;
+}
+
+.loader {
+    width: 50px;
+    height: 50px;
+    border: 5px solid #ffffff; /* 白色边框 */
+    border-top: 5px solid #00cc00; /* 深绿色的顶部边框 */
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+.textContainer {
+    margin-top: 20px; /* 让文本离加载动画有一定的间距 */
+    color: white;
+}
+
+.title {
+    font-family: "Rubik Distressed", serif;
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px; /* 增加字母间距，使标题更显眼 */
+}
+
+.description {
+    font-family: "Jacquard 12 Charted", serif;
+    font-weight: 400;
+    font-style: normal;
+    font-size: 1.2rem;
+    margin-top: 10px;
+    opacity: 0.8;
+}
+
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}

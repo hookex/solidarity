@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Head from 'next/head';
 import localFont from "next/font/local";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next"
@@ -9,6 +10,7 @@ const geistSans = localFont({
   variable: "--font-geist-sans",
   weight: "100 900",
 });
+
 const geistMono = localFont({
   src: "./fonts/GeistMonoVF.woff",
   variable: "--font-geist-mono",
@@ -27,13 +29,22 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
+    <Head>
+      <link rel="preconnect" href="https://fonts.googleapis.com"/>
+      <link rel="preconnect"
+            href="https://fonts.gstatic.com"
+            crossOrigin="anonymous"/>
+      <link href="https://fonts.googleapis.com/css2?family=Rubik+Distressed&display=swap"
+            rel="stylesheet"/>
+    </Head>
+
+    <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        <SpeedInsights/>
-        <Analytics/>
-        {children}
-      </body>
+    >
+    <SpeedInsights/>
+    <Analytics/>
+    {children}
+    </body>
     </html>
   );
 }

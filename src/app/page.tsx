@@ -3,29 +3,28 @@
 import Image from "next/image";
 import {useEffect, useState} from "react";
 import {useSpring, animated} from '@react-spring/web';
+import {useAsync} from 'react-use';
+import { useDebounce } from 'use-debounce';
+
 import FullScreenLayout from "@/app/components/full-screen-layout";
 import Snowfall from "@/app/components/snow-fall";
+import LoadingPage from "@/app/components/loading-page";
+
+type Data = { message: string };
+
+const fetchData = async (): Promise<Data> => {
+    const response = await fetch('/api/hello');
+    if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+    }
+    return await response.json();
+}
 
 export default function Home() {
-    const [message, setMessage] = useState('');
+    const { loading, error, value } = useAsync<Data>(fetchData, []);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch('/api/hello');
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                console.log('data.message', data.message)
-                setMessage(data.message);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-
-        fetchData();
-    }, []);
+    // 使用 useDebounce 控制 loading 最小持续时间为 1 秒
+    const [debouncedLoading] = useDebounce(loading, 1000000);
 
     const styles = useSpring({
         from: {opacity: 0},
@@ -34,12 +33,20 @@ export default function Home() {
     });
 
 
+    if (debouncedLoading) {
+        return <LoadingPage/>;  // 显示加载状态
+    }
+
+    if (error) {
+        return <div>Error: {error.message}</div>;  // 显示错误信息
+    }
+
     return (
         <FullScreenLayout>
             <Snowfall/>
             <h1 style={{fontSize: '88px'}}>Hello
                 <animated.div style={styles}>
-                    <div>Hooke!</div>
+                    <div>{value.message}!</div>
                 </animated.div>
             </h1>
         </FullScreenLayout>
