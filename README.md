@@ -5,6 +5,7 @@ https://solidarity-hooke.vercel.app/
 
 # Deploy
 https://vercel.com/cookmycode-gmailcoms-projects/solidarity
+https://github.com/hookex/solidarity/actions
 
 ## Getting Started
 
