@@ -72,6 +72,6 @@ jobs:
       - name: Create GitHub Release
         uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ steps.create_tag.outputs.tag_name }}  # 使用生成的标签
+          tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}  # 使用生成的标签
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
