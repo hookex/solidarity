@@ -24,7 +24,7 @@ export default function Home() {
     const { loading, error, value } = useAsync<any>(fetchData, []);
 
     // 使用 useDebounce 控制 loading 最小持续时间为 1 秒
-    const [debouncedLoading] = useDebounce(loading, 30000);
+    const [debouncedLoading] = useDebounce(loading, 100000);
 
     const styles = useSpring({
         from: {opacity: 0},
