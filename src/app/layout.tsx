@@ -34,7 +34,7 @@ export default function RootLayout({
       <link rel="preconnect"
             href="https://fonts.gstatic.com"
             crossOrigin="anonymous"/>
-      <link href="https://fonts.googleapis.com/css2?family=Rubik+Distressed&display=swap"
+      <link href="https://fonts.font.im/css2?family=Rubik+Distressed&display=swap"
             rel="stylesheet"/>
     </Head>
 
