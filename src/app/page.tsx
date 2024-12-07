@@ -24,7 +24,7 @@ export default function Home() {
     const { loading, error, value } = useAsync<Data>(fetchData, []);
 
     // 使用 useDebounce 控制 loading 最小持续时间为 1 秒
-    const [debouncedLoading] = useDebounce(loading, 1000000);
+    const [debouncedLoading] = useDebounce(loading, 3000);
 
     const styles = useSpring({
         from: {opacity: 0},
@@ -44,9 +44,9 @@ export default function Home() {
     return (
         <FullScreenLayout>
             <Snowfall/>
-            <h1 style={{fontSize: '88px'}}>Hello
+            <h1 style={{fontSize: '88px'}}>
                 <animated.div style={styles}>
-                    <div>{value.message}!</div>
+                    <div>{value.message}</div>
                 </animated.div>
             </h1>
         </FullScreenLayout>
