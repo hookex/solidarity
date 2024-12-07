@@ -20,8 +20,9 @@ jobs:
         with:
           node-version: '22' # 使用 Node.js 22
 
-      - name: Install npm 10
-        run: npm install -g npm@10
+      # 安装 cnpm（淘宝镜像加速工具）
+      - name: Install cnpm
+        run: npm install -g cnpm
 
       # 清理 npm 缓存
       - name: Clean npm cache
@@ -30,7 +31,7 @@ jobs:
       # 安装依赖并构建应用
       - name: Install dependencies and build
         run: |
-          npm ci
+          cnpm i
           npm run build
       # 压缩构建文件
       - name: Archive build files
