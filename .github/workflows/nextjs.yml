@@ -52,3 +52,11 @@ jobs:
             unzip -o solidarity-app.zip
             npm install --production
             pm2 restart solidarity || pm2 start npm --name "solidarity" -- star
+            
+      # 创建 GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          files: solidarity-app.zip
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # GitHub Token，
