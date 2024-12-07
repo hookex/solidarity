@@ -2,6 +2,7 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 # Visit
 https://solidarity-hooke.vercel.app/
+https://101.126.159.154:3000/
 
 # Deploy
 https://vercel.com/cookmycode-gmailcoms-projects/solidarity

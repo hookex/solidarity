@@ -20,6 +20,10 @@ jobs:
         with:
           node-version: '22' # 使用 Node.js 22
 
+      # 清理 npm 缓存
+      - name: Clean npm cache
+        run: npm cache clean --force
+
       # 安装依赖并构建应用
       - name: Install dependencies and build
         run: |
