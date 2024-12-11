@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: '22' # 使用 Node.js 22
 
+<<<<<<< HEAD
       # 安装依赖并构建应用
       - name: Install dependencies and build
         run: |
@@ -27,10 +28,36 @@ jobs:
           npm run build
           npm install --production # 仅保留生产依赖
 
+=======
+      # 安装 cnpm（淘宝镜像加速工具）
+      - name: Install cnpm
+        run: npm install -g cnpm
+
+      # 清理 npm 缓存
+      - name: Clean npm cache
+        run: npm cache clean --force
+
+      # 安装依赖并构建应用
+      - name: Install dependencies and build
+        run: |
+          cnpm i
+          npm run build
+>>>>>>> refs/remotes/origin/main
       # 压缩构建文件
       - name: Archive build files
         run: zip -r solidarity-app.zip . -x node_modules/\* .git/\*
 
+<<<<<<< HEAD
+=======
+      # 创建 Git 标签（基于日期）
+      - name: Create Git Tag
+        id: create_tag
+        run: |
+          TAG_NAME="v$(date +'%Y%m%d%H%M%S')"  # 使用当前日期和时间作为标签
+          git tag $TAG_NAME
+          git push origin $TAG_NAME
+
+>>>>>>> refs/remotes/origin/main
       # 将文件上传到服务器
       - name: Deploy to ECS server
         uses: appleboy/scp-action@v0.1.7
@@ -52,4 +79,16 @@ jobs:
             cd /var/www/solidarity
             unzip -o solidarity-app.zip
             npm install --production
+<<<<<<< HEAD
             pm2 restart solidarity || pm2 start npm --name "solidarity" -- start
+=======
+            pm2 restart solidarity || pm2 start npm --name "solidarity" -- star
+            
+      # 创建 GitHub Release
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: ${{ steps.create_tag.outputs.TAG_NAME }}  # 使用生成的标签
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+>>>>>>> refs/remotes/origin/main
