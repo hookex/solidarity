@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef } from 'react';
-import styles from './index.module.css';
+import { Input, Spin } from '@arco-design/web-react';
 
 interface Message {
   role: 'user' | 'system';
@@ -73,30 +73,39 @@ export default function AIPage() {
     }
   };
 
-  return (
-    <div className={styles.container}>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyPress}
-        placeholder="请输入提示词并敲击回车"
-        className={styles.input}
-      />
+  const handleInputChange = (value) => {
+    setInput(value);
+  };
 
-      <div className={styles.chatWindow} ref={chatWindowRef}>
+  return (
+    <div className="flex flex-col items-center justify-between h-screen p-6 bg-gray-100">
+      <div className="flex flex-col gap-4 max-w-2xl w-full p-6 bg-white rounded-lg shadow-lg overflow-auto max-h-[80vh]" ref={chatWindowRef}>
         {messages.map((msg, idx) => (
           <div
             key={idx}
-            className={`${styles.message} ${
-              msg.role === 'user' ? styles.messageUser : styles.messageSystem
+            className={`p-4 rounded-lg text-base ${
+              msg.role === 'user' ? 'bg-blue-200 text-blue-800 self-end' : 'bg-green-100 text-green-800 self-start'
             }`}
           >
             {msg.content}
           </div>
         ))}
-        {isLoading && <div className={styles.loading}>Loading...</div>}
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            {/*<Spin indicator={<IconLoading />} />*/}
+          </div>
+        )}
       </div>
+
+      <Input
+        value={input}
+        onChange={handleInputChange}
+        onKeyDown={handleKeyPress}
+        placeholder="请输入提示词并敲击回车"
+        className="mt-4 w-full max-w-2xl px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+        size="large"
+        allowClear
+      />
     </div>
   );
 }

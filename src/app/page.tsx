@@ -1,15 +1,13 @@
 'use client';
 
-import Image from "next/image";
-import {useEffect, useState} from "react";
 import {useSpring, animated} from '@react-spring/web';
 import {useAsync} from 'react-use';
 import {useDebounce} from 'use-debounce';
 
 import FullScreenLayout from "@/app/components/full-screen-layout";
-import Snowfall from "@/app/components/snow-fall";
 import LoadingPage from "@/app/components/loading-page";
 import AIPage from "@/app/components/ai";
+import "@arco-design/web-react/dist/css/arco.css";
 
 type Data = { message: string };
 
