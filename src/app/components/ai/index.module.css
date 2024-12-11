@@ -52,3 +52,12 @@
     margin-top: 10px;
     font-size: 16px;
 }
+
+.title {
+    font-family: "Rubik Distressed", serif;
+    font-size: 3rem;
+    margin: 0;
+    letter-spacing: 2px; /* 增加字母间距，使标题更显眼 */
+    color: var(--primary-green-color);
+}
+
