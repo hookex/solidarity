@@ -45,6 +45,10 @@ jobs:
           TAG_NAME="v$(date +'%Y%m%d%H%M%S')"  # 使用当前日期和时间作为标签
           git tag $TAG_NAME
           git push origin $TAG_NAME
+          echo "TAG_NAME=$TAG_NAME" >> $GITHUB_ENV
+          echo "::set-output name=tag_name::$TAG_NAME"  # 设置输出变量
+        outputs:
+          TAG_NAME: ${{ env.TAG_NAME }}  # 将环境变量 TAG_NAME 设置为输出
 
       # 将文件上传到服务器
       - name: Deploy to ECS server
