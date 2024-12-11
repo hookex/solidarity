@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import styles from './index.module.css';
 
 interface Message {
@@ -30,6 +30,14 @@ export default function AIPage() {
   const [input, setInput] = useState<string>('');
   const [messages, setMessages] = useState<Message[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const chatWindowRef = useRef<HTMLDivElement>(null);
+
+  // 自动滚动到消息底部
+  useEffect(() => {
+    if (chatWindowRef.current) {
+      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+    }
+  }, [messages]);
 
   const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter' && input.trim() !== '') {
@@ -45,10 +53,13 @@ export default function AIPage() {
 
       try {
         await fetchStream(prompt, (chunk) => {
-          setMessages((prev) => [
-            ...prev.slice(0, prev.length - 1),
-            { ...systemMessage, content: prev[prev.length - 1].content + chunk },
-          ]);
+          setMessages((prev) => {
+            const lastMessage = prev[prev.length - 1];
+            return [
+              ...prev.slice(0, prev.length - 1),
+              { ...lastMessage, content: lastMessage.content + chunk },
+            ];
+          });
         });
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -64,7 +75,16 @@ export default function AIPage() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.chatWindow}>
+      <input
+        type="text"
+        value={input}
+        onChange={(e) => setInput(e.target.value)}
+        onKeyDown={handleKeyPress}
+        placeholder="请输入提示词并敲击回车"
+        className={styles.input}
+      />
+
+      <div className={styles.chatWindow} ref={chatWindowRef}>
         {messages.map((msg, idx) => (
           <div
             key={idx}
@@ -77,14 +97,6 @@ export default function AIPage() {
         ))}
         {isLoading && <div className={styles.loading}>Loading...</div>}
       </div>
-      <input
-        type="text"
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-        onKeyDown={handleKeyPress}
-        placeholder="请输入提示词并敲击回车"
-        className={styles.input}
-      />
     </div>
   );
 }
