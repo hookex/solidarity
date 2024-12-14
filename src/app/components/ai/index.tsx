@@ -55,11 +55,14 @@ export default function AIPage() {
 
   const generateId = () => Math.floor(Math.random() * 1000000);
 
-  const transitions = useTransition(messages, {
+  // 使用 useTransition 确保新消息动画显示在顶部
+  const transitions = useTransition(
+    messages.filter((msg) => msg.role === "system"), // 只保留系统消息
+    {
     key: (msg) => msg.id,
-    from: { transform: "translateY(-50%)", opacity: 0 },
-    enter: { transform: "translateY(0%)", opacity: 1 },
-    leave: { transform: "translateY(-50%)", opacity: 0 },
+    from: { transform: "translateY(-20px)", opacity: 0 },
+    enter: { transform: "translateY(0)", opacity: 1 },
+    leave: { transform: "translateY(-20px)", opacity: 0 },
     trail: 100,
   });
 
@@ -72,7 +75,7 @@ export default function AIPage() {
 
   useEffect(() => {
     if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = chatWindowRef.current.scrollHeight;
+      chatWindowRef.current.scrollTop = 0; // 确保视图滚动到最上方
     }
 
     localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
@@ -90,34 +93,34 @@ export default function AIPage() {
         role: "user",
         content: prompt,
       };
-      setMessages((prev) => [...prev, userMessage]);
+      setMessages((prev) => [userMessage, ...prev]); // 新消息插入到数组顶部
 
       const systemMessage: MessageData = {
         id: generateId(),
         role: "system",
         content: "",
       };
-      setMessages((prev) => [...prev, systemMessage]);
+      setMessages((prev) => [systemMessage, ...prev]); // 系统消息插入到数组顶部
 
       try {
         await fetchStream(sessionId, prompt, messages, (chunk) => {
           setMessages((prev) => {
             const updatedMessage = {
-              ...prev[prev.length - 1],
-              content: prev[prev.length - 1].content + chunk,
+              ...prev[0],
+              content: prev[0].content + chunk,
             };
-            return [...prev.slice(0, prev.length - 1), updatedMessage];
+            return [updatedMessage, ...prev.slice(1)]; // 更新顶部消息
           });
         });
       } catch (error) {
         console.error("Error fetching data:", error);
         setMessages((prev) => [
-          ...prev,
           {
             id: generateId(),
             role: "system",
             content: "发生错误：无法获取数据。",
           },
+          ...prev,
         ]);
       } finally {
         setIsLoading(false);
@@ -142,7 +145,7 @@ export default function AIPage() {
               w-full pl-12 pr-4 py-3 text-lg text-gray-800 bg-white border border-gray-300 rounded-full shadow-sm
               focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent transition-all duration-300
             "
-            placeholder=""
+            placeholder="请输入内容..."
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={handleKeyPress}
@@ -150,6 +153,7 @@ export default function AIPage() {
         </div>
       </div>
 
+      {/* 消息区域 */}
       <div
         className="flex flex-col gap-4 max-w-2xl w-full p-6 overflow-y-auto mx-auto mt-4"
         style={{ height: "calc(100vh - 120px)" }}
