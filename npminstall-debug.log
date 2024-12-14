@@ -1,18 +1,18 @@
 {
   root: '/Users/hooke/code/solidarity',
-  registry: 'https://registry.npmmirror.com',
+  registry: 'https://registry.npmjs.org',
   pkgs: [
     {
-      name: '@arco-design/web-react',
+      name: 'prettier',
       version: 'latest',
       type: 'tag',
       alias: undefined,
       arg: [Result]
     },
     {
-      name: '',
-      version: '/Users/hooke/code/solidarity/@arco-design/web-react/icon',
-      type: 'directory',
+      name: 'prettier-plugin-handlebars',
+      version: 'latest',
+      type: 'tag',
       alias: undefined,
       arg: [Result]
     }
@@ -21,8 +21,8 @@
   cacheStrict: false,
   cacheDir: '/Users/hooke/.npminstall_tarball',
   env: {
-    npm_config_registry: 'https://registry.npmmirror.com',
-    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=/Users/hooke/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@arco-design/web-react","@arco-design/web-react/icon"],"original":["--fix-bug-versions","--china","--userconfig=/Users/hooke/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmmirror.com","@arco-design/web-react","@arco-design/web-react/icon"]}',
+    npm_config_registry: 'https://registry.npmjs.org',
+    npm_config_argv: '{"remain":[],"cooked":["--fix-bug-versions","--china","--userconfig=/Users/hooke/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmjs.org","prettier","prettier-plugin-handlebars","--save-dev"],"original":["--fix-bug-versions","--china","--userconfig=/Users/hooke/.cnpmrc","--disturl=https://cdn.npmmirror.com/binaries/node","--registry=https://registry.npmjs.org","prettier","prettier-plugin-handlebars","--save-dev"]}',
     npm_config_user_agent: 'npminstall/7.12.0 npm/? node/v22.12.0 darwin arm64',
     npm_config_cache: '/Users/hooke/.npminstall_tarball',
     NODE: '/Users/hooke/.nvm/versions/node/v22.12.0/bin/node',
@@ -30,7 +30,7 @@
     npm_execpath: '/Users/hooke/.nvm/versions/node/v22.12.0/lib/node_modules/cnpm/node_modules/npminstall/bin/install.js',
     npm_config_userconfig: '/Users/hooke/.cnpmrc',
     npm_config_disturl: 'https://cdn.npmmirror.com/binaries/node',
-    npm_config_r: 'https://registry.npmmirror.com',
+    npm_config_r: 'https://registry.npmjs.org',
     COREPACK_NPM_REGISTRY: 'https://registry.npmmirror.com',
     EDGEDRIVER_CDNURL: 'https://npmmirror.com/mirrors/edgedriver',
     NODEJS_ORG_MIRROR: 'https://cdn.npmmirror.com/binaries/node',

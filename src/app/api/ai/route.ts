@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
 				// 发起 OpenAI 请求，带上下文对话
 				const openaiStream = await openai.chat.completions.create({
 					messages: context, // 使用上下文
-					// model: 'ep-20241203130210-txrtw',
-					model: 'bot-20241214140237-g9dqh',
+					model: 'ep-20241203130210-txrtw',
+					// model: 'bot-20241214140237-g9dqh',
 					stream: true,
 				});
 

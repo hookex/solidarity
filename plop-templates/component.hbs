@@ -1,0 +1,18 @@
+import React from 'react';
+import styles from './{{pascalCase name}}.module.css';
+
+interface {{pascalCase name}}Props {
+title: string;
+description: string;
+}
+
+const {{pascalCase name}}: React.FC<{{pascalCase name}}Props> = ({ title, description }) => {
+    return (
+    <div className={styles.container}>
+        <h1 className={styles.title}>{title}</h1>
+        <p className={styles.description}>{description}</p>
+    </div>
+    );
+    };
+
+    export default {{pascalCase name}};
