@@ -1,48 +1,59 @@
-'use client';
-
-import React, { RefObject } from 'react';
-import { useTransition, animated } from '@react-spring/web';
+import React from 'react';
+import Masonry from 'react-masonry-css';
 import Message from '@/app/components/message';
 
 interface MessageData {
   id: number;
   role: 'user' | 'system';
-  content: string; // Markdown 格式内容
+  content: string;
 }
 
 interface MessageListProps {
   messages: MessageData[];
-  chatWindowRef: RefObject<HTMLDivElement>;
+  highlightIndex: number | null;
   isLoading: boolean;
+  chatWindowRef: React.RefObject<HTMLDivElement>;
 }
 
-const MessageList: React.FC<MessageListProps> = ({ messages, chatWindowRef, isLoading }) => {
-  // 使用 useTransition 确保新消息动画显示在顶部
-  const transitions = useTransition(
-    messages.filter((msg) => msg.role === 'system'), // 只保留系统消息
-    {
-      key: (msg) => msg.id,
-      from: { transform: 'translateY(-20px)', opacity: 0 },
-      enter: { transform: 'translateY(0)', opacity: 1 },
-      leave: { transform: 'translateY(-20px)', opacity: 0 },
-      trail: 100,
-    }
-  );
+const MessageList: React.FC<MessageListProps> = ({
+                                                   messages,
+                                                   highlightIndex,
+                                                   isLoading,
+                                                   chatWindowRef,
+                                                 }) => {
+  const breakpointColumns = {
+    default: 3, // 默认三列布局
+    768: 1, // 小屏幕单列
+  };
 
   return (
     <div
-      className="flex flex-col gap-4 max-w-2xl w-full p-6 overflow-y-auto mx-auto mt-4"
-      style={{ height: 'calc(100vh - 120px)' }}
       ref={chatWindowRef}
+      className="p-6 overflow-y-auto mx-auto"
+      style={{ height: 'calc(100vh - 120px)' }}
     >
-      {transitions((style, item) => (
-        <Message key={item.id} role={item.role} content={item.content} style={style} />
-      ))}
-      {isLoading && (
-        <div className="flex justify-center items-center">
-          <div className="loader"></div> {/* loader 样式需要保留或引用 */}
-        </div>
-      )}
+      <Masonry
+        breakpointCols={breakpointColumns}
+        className="flex w-auto gap-4"
+        columnClassName="masonry-column"
+      >
+        {messages.map((message, index) => (
+          <div key={message.id} data-index={index}>
+            {/* 渲染单个 Message */}
+            <Message
+              role={message.role}
+              content={message.content}
+              isHighlighted={highlightIndex === index} // 传递高亮信息
+            />
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-center items-center col-span-2">
+            <div className="loader">加载中...</div>
+          </div>
+        )}
+      </Masonry>
     </div>
   );
 };

@@ -27,3 +27,9 @@ body {
 .arco-input-inner-wrapper {
   background: #fff;
 }
+
+.masonry-column {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem; /* 控制每列中的卡片间距 */
+}
