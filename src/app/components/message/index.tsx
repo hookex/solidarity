@@ -8,9 +8,10 @@ interface MessageProps {
   role: 'user' | 'system';
   content: string;
   isHighlighted?: boolean; // 新增高亮标识
+  timestamp?: string; // 新增时间戳属性
 }
 
-const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false }) => {
+const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp }) => {
   const [isCopied, setIsCopied] = useState(false);
 
   const handleCopy = () => {
@@ -22,12 +23,25 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false 
 
   return (
     <div
-      className={`p-4 rounded-lg shadow relative ${
-        isHighlighted ? 'bg-blue-100 border-blue-500' : 'bg-white  border-gray-300'
-      } ${role === 'user' ? 'self-end' : 'self-start'}`}
-    >
+      className={`p-4 rounded-lg shadow-sm relative ${
+        isHighlighted ? 'bg-blue-100 border-blue-500' : 'bg-white border-gray-300'
+      } ${role === 'user' ? 'self-end' : 'self-start'}`}>
       {/* 使用 ReactMarkdown 渲染内容 */}
-      <ReactMarkdown rehypePlugins={[rehypeHighlight]}>{content}</ReactMarkdown>
+      <div className="mb-6">
+        <ReactMarkdown
+          rehypePlugins={[rehypeHighlight]}
+          className="break-words" // 确保内容自动换行
+        >
+          {content}
+        </ReactMarkdown>
+      </div>
+
+      {/* 时间戳 */}
+      {timestamp && (
+        <div className="absolute bottom-2 left-2 text-xs text-gray-400 whitespace-nowrap">
+          {timestamp}
+        </div>
+      )}
 
       {/* 复制按钮 */}
       <button

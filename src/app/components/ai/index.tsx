@@ -8,6 +8,7 @@ type MessageData = {
   id: number;
   role: 'user' | 'system';
   content: string; // Markdown 格式内容
+  timestamp: string; // 添加时间戳字段
 };
 
 const SESSION_STORAGE_KEY = 'ai_session_id';
@@ -92,6 +93,11 @@ export default function AIPage() {
 
   const generateId = () => Math.floor(Math.random() * 1000000);
 
+  const getCurrentTimestamp = () => {
+    const now = new Date();
+    return now.toISOString().replace('T', ' ').substring(0, 19); // 格式化为 YYYY-MM-DD HH:mm:ss
+  };
+
   const handleSearch = async () => {
     const prompt = input.trim();
     if (!prompt) return;
@@ -103,6 +109,7 @@ export default function AIPage() {
       id: generateId(),
       role: 'user',
       content: prompt,
+      timestamp: getCurrentTimestamp(), // 添加时间戳
     };
     setMessages((prev) => [userMessage, ...prev]); // 新消息插入到数组顶部
 
@@ -110,6 +117,7 @@ export default function AIPage() {
       id: generateId(),
       role: 'system',
       content: '',
+      timestamp: getCurrentTimestamp(), // 添加时间戳
     };
     setMessages((prev) => [systemMessage, ...prev]); // 系统消息插入到数组顶部
 
@@ -130,6 +138,7 @@ export default function AIPage() {
           id: generateId(),
           role: 'system',
           content: '发生错误：无法获取数据。',
+          timestamp: getCurrentTimestamp(), // 添加时间戳
         },
         ...prev,
       ]);
