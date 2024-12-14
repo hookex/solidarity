@@ -1,14 +1,14 @@
 'use client'
 
 import React, { useState, useEffect, useRef } from 'react'
-import { MagnifyingGlassIcon } from '@heroicons/react/24/outline'
+import SearchBar from '@/app/components/SearchBar'
 import MessageList from '@/app/components/MessageList'
 import styles from './index.module.css'
 
 type MessageData = {
-  id: number;
-  role: 'user' | 'system';
-  content: string; // Markdown 格式内容
+  id: number
+  role: 'user' | 'system'
+  content: string // Markdown 格式内容
 }
 
 const SESSION_STORAGE_KEY = 'ai_session_id'
@@ -46,6 +46,7 @@ export default function AIPage() {
   const [input, setInput] = useState<string>('')
   const [messages, setMessages] = useState<MessageData[]>([])
   const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [highlightIndex, setHighlightIndex] = useState<number | null>(null) // 当前高亮索引
   const chatWindowRef = useRef<HTMLDivElement>(null)
 
   const [sessionId, setSessionId] = useState<string>(() => {
@@ -67,57 +68,63 @@ export default function AIPage() {
   }, [])
 
   useEffect(() => {
-    if (chatWindowRef.current) {
-      chatWindowRef.current.scrollTop = 0 // 确保视图滚动到最上方
-    }
-
-    localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages))
-  }, [messages])
-
-  const handleKeyPress = async (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter' && input.trim() !== '') {
-      e.preventDefault()
-      const prompt = input.trim()
-      setInput('')
-      setIsLoading(true)
-
-      const userMessage: MessageData = {
-        id: generateId(),
-        role: 'user',
-        content: prompt
-      }
-      setMessages((prev) => [userMessage, ...prev]) // 新消息插入到数组顶部
-
-      const systemMessage: MessageData = {
-        id: generateId(),
-        role: 'system',
-        content: ''
-      }
-      setMessages((prev) => [systemMessage, ...prev]) // 系统消息插入到数组顶部
-
-      try {
-        await fetchStream(sessionId, prompt, messages, (chunk) => {
-          setMessages((prev) => {
-            const updatedMessage = {
-              ...prev[0],
-              content: prev[0].content + chunk
-            }
-            return [updatedMessage, ...prev.slice(1)] // 更新顶部消息
-          })
+    if (chatWindowRef.current && highlightIndex !== null) {
+      const messageElement = chatWindowRef.current.querySelector(
+        `[data-index="${highlightIndex}"]`
+      ) as HTMLDivElement
+      if (messageElement) {
+        messageElement.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center'
         })
-      } catch (error) {
-        console.error('Error fetching data:', error)
-        setMessages((prev) => [
-          {
-            id: generateId(),
-            role: 'system',
-            content: '发生错误：无法获取数据。'
-          },
-          ...prev
-        ])
-      } finally {
-        setIsLoading(false)
       }
+    }
+    localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages))
+  }, [messages, highlightIndex])
+
+  const handleSearch = async () => {
+    const prompt = input.trim()
+    if (!prompt) return
+
+    setInput('')
+    setIsLoading(true)
+
+    const userMessage: MessageData = {
+      id: generateId(),
+      role: 'user',
+      content: prompt
+    }
+    setMessages((prev) => [userMessage, ...prev]) // 新消息插入到数组顶部
+
+    const systemMessage: MessageData = {
+      id: generateId(),
+      role: 'system',
+      content: ''
+    }
+    setMessages((prev) => [systemMessage, ...prev]) // 系统消息插入到数组顶部
+
+    try {
+      await fetchStream(sessionId, prompt, messages, (chunk) => {
+        setMessages((prev) => {
+          const updatedMessage = {
+            ...prev[0],
+            content: prev[0].content + chunk
+          }
+          return [updatedMessage, ...prev.slice(1)] // 更新顶部消息
+        })
+      })
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      setMessages((prev) => [
+        {
+          id: generateId(),
+          role: 'system',
+          content: '发生错误：无法获取数据。'
+        },
+        ...prev
+      ])
+    } finally {
+      setIsLoading(false)
     }
   }
 
@@ -128,26 +135,34 @@ export default function AIPage() {
       </div>
 
       <div className="w-full flex justify-center py-2 px-4 sm:px-6 lg:px-8">
-        <div className="relative w-full max-w-2xl">
-          <MagnifyingGlassIcon
-            className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400"
-          />
-          <input
-            type="text"
-            className="
-              w-full pl-12 pr-4 py-3 text-lg text-gray-800 bg-white border border-gray-300 rounded-full shadow-sm
-              focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent transition-all duration-300
-            "
-            placeholder=""
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={handleKeyPress}
-          />
-        </div>
+        <SearchBar
+          value={input}
+          onChange={setInput}
+          onSubmit={handleSearch}
+          onHistorySelect={(index) => setHighlightIndex(index)} // 高亮回调
+        />
       </div>
 
       {/* 消息区域 */}
-      <MessageList messages={messages} chatWindowRef={chatWindowRef} isLoading={isLoading} />
+      <div ref={chatWindowRef} className="flex-1 overflow-y-auto px-4 sm:px-6 lg:px-8">
+        {messages.map((message, index) => (
+          <div
+            key={message.id}
+            data-index={index}
+            className={`p-4 rounded-lg shadow mb-4 ${
+              highlightIndex === index ? 'bg-blue-100' : 'bg-white'
+            }`}
+          >
+            {message.content}
+          </div>
+        ))}
+
+        {isLoading && (
+          <div className="flex justify-center items-center">
+            <div className="loader">加载中...</div>
+          </div>
+        )}
+      </div>
     </div>
   )
 }
