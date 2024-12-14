@@ -22,7 +22,7 @@ export async function POST(request: NextRequest) {
 	}
 
 	// 获取当前会话的上下文（默认为空数组）
-	let context = contextMap.get(sessionId) || [
+	const context = contextMap.get(sessionId) || [
 		{ role: 'system', content: '你是豆包，是由字节跳动开发的 AI 人工智能助手' },
 	];
 
@@ -37,8 +37,8 @@ export async function POST(request: NextRequest) {
 				// 发起 OpenAI 请求，带上下文对话
 				const openaiStream = await openai.chat.completions.create({
 					messages: context, // 使用上下文
-					model: 'ep-20241203130210-txrtw',
-					// model: 'bot-20241214140237-g9dqh',
+					// model: 'ep-20241203130210-txrtw',
+					model: 'bot-20241214140237-g9dqh',
 					stream: true,
 				});
 
