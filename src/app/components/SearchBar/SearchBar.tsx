@@ -76,7 +76,7 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, onSubmit, onHist
           onKeyDown={handleKeyDown}
           placeholder="输入问题..."
           className="w-full pl-10 pr-12 py-2.5 sm:py-3
-            text-sm sm:text-base
+            text-base
             rounded-lg border border-gray-200
             focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
             placeholder-gray-400 bg-white shadow-sm"
