@@ -10,7 +10,7 @@ interface MessageProps {
   isHighlighted?: boolean;
   timestamp?: string;
   modelName?: string;
-  type?: 'search_status' | 'answer';
+  type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';
 }
 
 const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp, modelName, type }) => {
@@ -26,7 +26,34 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       setTimeout(() => setIsCopied(false), 2000);
     });
   };
-  
+
+  const getStatusDisplay = () => {
+    switch (type) {
+      case 'search_status':
+        return {
+          dots: 'bg-blue-400',
+          text: 'text-blue-500',
+          content: content || '正在搜索相关信息...'
+        };
+      case 'thinking_status':
+        return {
+          dots: 'bg-purple-400',
+          text: 'text-purple-500',
+          content: content || '正在思考回答...'
+        };
+      case 'generating_status':
+        return {
+          dots: 'bg-green-400',
+          text: 'text-green-500',
+          content: content || '正在生成回答...'
+        };
+      default:
+        return null;
+    }
+  };
+
+  const statusDisplay = getStatusDisplay();
+
   return (
     <div
       className={`p-3 rounded-lg shadow-sm relative ${
@@ -36,14 +63,16 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       onMouseLeave={() => setIsHovered(false)}
     >
       <div className="w-full" style={{ maxWidth: '100%' }}>
-        {isSearching && (
+        {statusDisplay && (
           <div className="flex items-center text-gray-500 mb-2">
             <div className="flex space-x-1">
-              <div className="h-1.5 w-1.5 bg-blue-400 rounded-full animate-bounce"></div>
-              <div className="h-1.5 w-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
-              <div className="h-1.5 w-1.5 bg-blue-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+              <div className={`h-1.5 w-1.5 ${statusDisplay.dots} rounded-full animate-bounce`}></div>
+              <div className={`h-1.5 w-1.5 ${statusDisplay.dots} rounded-full animate-bounce [animation-delay:0.2s]`}></div>
+              <div className={`h-1.5 w-1.5 ${statusDisplay.dots} rounded-full animate-bounce [animation-delay:0.4s]`}></div>
             </div>
-            <span className="ml-2 text-sm font-medium text-blue-500">{content}</span>
+            <span className={`ml-2 text-sm font-medium ${statusDisplay.text}`}>
+              {statusDisplay.content}
+            </span>
           </div>
         )}
 

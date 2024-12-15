@@ -4,21 +4,21 @@ import { NextRequest, NextResponse } from 'next/server';
 const AI_MODELS = {
 	douBao: {
 		model: 'bot-20241214140237-g9dqh',
-		systemPrompt: '你是一个智能助手，请基于联网搜索结果提供准确、客观的回答。回答要简洁清晰，并标注信息来源。',
+		systemPrompt: '你是简洁的助手。回答限140字内，不确定的直接说不知道。有信息来源要标注。',
 		name: '豆包 AI',
 		apiPath: '/bots/chat/completions',
 		stream: false
 	},
 	bot: {
 		model: 'ep-20241215223428-h6p4b',
-		systemPrompt: '你是 Moonshot AI 助手，请基于联网搜索结果提供全面、专业的分析。回答要条理清晰，并引用可靠来源。',
+		systemPrompt: '你是 Moonshot AI。回答限140字内，不确定就说不知道。引用需标明来源。',
 		name: 'Moonshot AI',
 		apiPath: '/chat/completions',
 		stream: true
 	},
 	zhipu: {
 		model: 'ep-20241215223536-fb4sn',
-		systemPrompt: '你是智谱 AI 助手，请基于联网搜索结果提供深入的见解和建议。回答要重点突出，并注明参考来源。',
+		systemPrompt: '你是智谱助手。回答限140字内，不确定就说不知道。重要信息标注来源。',
 		name: '智谱 AI',
 		apiPath: '/chat/completions',
 		stream: true
@@ -88,6 +88,30 @@ async function createModelStream(
 				};
 				console.log(`${modelConfig.name} - Sending search status:`, searchMessage);
 				controller.enqueue(encoder.encode(JSON.stringify(searchMessage) + '\n'));
+			}
+			
+			// 处理思考状态
+			if (data.metadata?.thinking_info) {
+				const thinkingMessage = {
+					model: modelConfig.model,
+					modelName: modelConfig.name,
+					content: '正在思考回答...',
+					type: 'thinking_status'
+				};
+				console.log(`${modelConfig.name} - Sending thinking status:`, thinkingMessage);
+				controller.enqueue(encoder.encode(JSON.stringify(thinkingMessage) + '\n'));
+			}
+			
+			// 处理生成状态
+			if (data.metadata?.generating_info) {
+				const generatingMessage = {
+					model: modelConfig.model,
+					modelName: modelConfig.name,
+					content: '正在生成回答...',
+					type: 'generating_status'
+				};
+				console.log(`${modelConfig.name} - Sending generating status:`, generatingMessage);
+				controller.enqueue(encoder.encode(JSON.stringify(generatingMessage) + '\n'));
 			}
 			
 			const content = data.choices?.[0]?.message?.content || '';
