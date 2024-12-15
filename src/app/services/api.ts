@@ -28,7 +28,7 @@ export class AIService {
    */
   static async searchStream(
     params: AISearchParams,
-    onChunk: (chunk: string) => void
+    onChunk: (modelId: string, chunk: string) => void
   ): Promise<ApiResponse<void>> {
     try {
       const response = await fetch(`${this.API_BASE}/ai`, {
@@ -51,8 +51,20 @@ export class AIService {
       while (true) {
         const { value, done } = await reader.read();
         if (done) break;
-        const chunk = decoder.decode(value);
-        onChunk(chunk);
+        
+        const chunks = decoder.decode(value).split('\n');
+        for (const chunk of chunks) {
+          if (chunk) {
+            try {
+              const { model, content, error } = JSON.parse(chunk);
+              if (content || error) {
+                onChunk(model, content || error);
+              }
+            } catch (e) {
+              console.error('Error parsing chunk:', e);
+            }
+          }
+        }
       }
 
       return { data: undefined };

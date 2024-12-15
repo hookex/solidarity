@@ -11,7 +11,6 @@ const CONTEXT_STORAGE_KEY = 'ai_chat_context';
 export default function AIPage() {
   const [input, setInput] = useState<string>('');
   const chatWindowRef = useRef<HTMLDivElement>(null);
-  const currentMessageRef = useRef<string>('');
   
   const { 
     messages, 
@@ -19,7 +18,7 @@ export default function AIPage() {
     isLoading, 
     highlightIndex,
     addMessage,
-    updateLastMessage,
+    updateMessage,
     setIsLoading,
     setHighlightIndex 
   } = useAISearchStore();
@@ -42,7 +41,6 @@ export default function AIPage() {
 
     setInput('');
     setIsLoading(true);
-    currentMessageRef.current = '';
 
     // 添加用户消息
     addMessage({
@@ -52,13 +50,8 @@ export default function AIPage() {
       timestamp: getCurrentTimestamp(),
     });
 
-    // 添加系统消息
-    addMessage({
-      id: generateId(),
-      role: 'system',
-      content: '',
-      timestamp: getCurrentTimestamp(),
-    });
+    // 为每个模型添加一个空的系统消息
+    const modelMessages = new Map();
 
     try {
       const result = await AIService.searchStream(
@@ -67,9 +60,21 @@ export default function AIPage() {
           prompt,
           context: messages,
         },
-        (chunk) => {
-          currentMessageRef.current += chunk;
-          updateLastMessage(currentMessageRef.current);
+        (modelId, chunk) => {
+          if (!modelMessages.has(modelId)) {
+            const messageId = generateId();
+            modelMessages.set(modelId, messageId);
+            addMessage({
+              id: messageId,
+              role: 'system',
+              content: '',
+              timestamp: getCurrentTimestamp(),
+              modelId,
+            });
+          }
+          
+          const messageId = modelMessages.get(modelId);
+          updateMessage(messageId, (prevContent) => prevContent + chunk);
         }
       );
 

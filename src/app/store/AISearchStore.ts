@@ -8,6 +8,7 @@ export type MessageData = {
   role: 'user' | 'system';  // 消息角色：用户或系统
   content: string;     // 消息内容（Markdown格式）
   timestamp: string;   // 消息时间戳
+  modelId?: string; // 添加可选的模型标识
 };
 
 /**
@@ -27,6 +28,7 @@ interface AISearchState {
   setSessionId: (sessionId: string) => void;           // 设置会话ID
   setIsLoading: (isLoading: boolean) => void;          // 设置加载状态
   setHighlightIndex: (index: number | null) => void;   // 设置高亮消息索引
+  updateMessage: (id: number, updater: (prevContent: string) => string) => void;
 }
 
 // 本地存储键名
@@ -62,6 +64,13 @@ export const useAISearchStore = create<AISearchState>((set) => ({
   setSessionId: (sessionId) => set({ sessionId }),
   setIsLoading: (isLoading) => set({ isLoading }),
   setHighlightIndex: (highlightIndex) => set({ highlightIndex }),
+  updateMessage: (id, updater) => set((state) => ({
+    messages: state.messages.map(msg =>
+      msg.id === id
+        ? { ...msg, content: updater(msg.content) }
+        : msg
+    )
+  })),
 }));
 
 /**
