@@ -99,26 +99,30 @@ export default function AIPage() {
   };
 
   return (
-    <div className="flex flex-col h-screen w-screen bg-gray-50">
-      <div className="pt-10 flex justify-center">
-        <h1 className="text-3xl font-bold text-gray-800">AI搜索</h1>
+    <div className="flex flex-col min-h-screen w-full bg-gray-50">
+      <div className="pt-4 sm:pt-10 flex justify-center">
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">AI搜索</h1>
       </div>
 
-      <div className="w-full flex justify-center py-2 px-4 sm:px-6 lg:px-8">
-        <SearchBar
-          value={input}
-          onChange={setInput}
-          onSubmit={handleSearch}
-          onHistorySelect={setHighlightIndex}
+      <div className="w-full flex justify-center p-2 sm:py-2 sm:px-4 lg:px-8">
+        <div className="w-full max-w-3xl px-2 sm:px-0">
+          <SearchBar
+            value={input}
+            onChange={setInput}
+            onSubmit={handleSearch}
+            onHistorySelect={setHighlightIndex}
+          />
+        </div>
+      </div>
+
+      <div className="flex-1 overflow-hidden">
+        <MessageList
+          messages={messages}
+          highlightIndex={highlightIndex}
+          isLoading={isLoading}
+          chatWindowRef={chatWindowRef}
         />
       </div>
-
-      <MessageList
-        messages={messages}
-        highlightIndex={highlightIndex}
-        isLoading={isLoading}
-        chatWindowRef={chatWindowRef}
-      />
     </div>
   );
 }

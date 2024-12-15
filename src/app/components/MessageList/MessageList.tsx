@@ -53,11 +53,8 @@ const MessageList: React.FC<MessageListProps> = ({
   return (
     <div
       ref={chatWindowRef}
-      className="p-6 overflow-y-auto mx-auto w-full max-w-3xl"
-      style={{ 
-        height: 'calc(100vh - 120px)',
-        visibility: isLayoutReady ? 'visible' : 'hidden'
-      }}
+      className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl"
+      style={{ height: 'calc(100vh - 120px)' }}
     >
       <Masonry
         breakpointCols={breakpointColumns}

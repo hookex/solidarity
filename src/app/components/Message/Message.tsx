@@ -69,13 +69,15 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
 
   return (
     <div
-      className={`p-3 rounded-lg shadow-sm relative ${
-        isHighlighted ? 'bg-blue-50/80' : 'bg-white'
-      } ${role === 'user' ? 'self-end' : 'self-start'} transition-colors duration-200`}
+      className={`p-2 sm:p-3 rounded-lg shadow-sm relative 
+        ${isHighlighted ? 'bg-blue-50/80' : 'bg-white'}
+        ${role === 'user' ? 'self-end' : 'self-start'} 
+        transition-colors duration-200
+        max-w-[92%] sm:max-w-[85%]`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div className="w-full" style={{ maxWidth: '100%' }}>
+      <div className="w-full">
         {statusDisplay && (
           <div className="flex items-center text-gray-500 mb-2">
             <div className="flex space-x-1">
@@ -103,7 +105,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
             ) : (
               <ReactMarkdown
                 rehypePlugins={[rehypeHighlight]}
-                className="prose prose-slate max-w-none break-words leading-relaxed"
+                className="prose prose-sm sm:prose-base prose-slate max-w-none break-words leading-relaxed"
                 components={{
                   // 调整标题间距
                   h1: ({ children }) => (
@@ -117,7 +119,9 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
                   ),
                   // 减小段落间距
                   p: ({ children }) => (
-                    <p className="font-sans mb-2.5 text-gray-800 text-[14px] leading-relaxed tracking-tight">{children}</p>
+                    <p className="text-[13px] sm:text-[14px] mb-2 text-gray-800 leading-relaxed">
+                      {children}
+                    </p>
                   ),
                   // 代码使用正常字重
                   code: ({ inline, className, children, ...props }: CodeBlockProps) => {
@@ -158,8 +162,8 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
           </div>
         )}
 
-        {/* 底部信息栏 - 进一步减小间距 */}
-        <div className="flex items-center gap-1.5 text-[11px] text-gray-400 mt-1 pt-1 border-t border-gray-100">
+        {/* 底部信息栏 */}
+        <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-[11px] text-gray-400 mt-1 pt-1 border-t border-gray-100">
           {/* 模型名称 */}
           {modelName && role === 'system' && (
             <div className="font-medium text-gray-500">

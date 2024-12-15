@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
-import { MagnifyingGlassIcon } from '@heroicons/react/16/solid'
+import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid'
 
 interface SearchBarProps {
   value: string
@@ -63,25 +64,36 @@ const SearchBar: React.FC<SearchBarProps> = ({ value, onChange, onSubmit, onHist
   }
 
   return (
-    <div className="relative w-full max-w-2xl">
-      <MagnifyingGlassIcon
-        className="absolute left-4 top-1/2 transform -translate-y-1/2 h-6 w-6 text-gray-400"
-      />
-      <input
-        type="text"
-        className="
-          w-full pl-12 pr-4 py-3 text-lg text-gray-800 bg-white border border-gray-300 rounded-full shadow-sm
-          focus:outline-none focus:ring-4 focus:ring-blue-500 focus:border-transparent transition-all duration-300
-        "
-        placeholder="搜索内容"
-        value={value}
-        onChange={(e) => {
-          onChange(e.target.value)
-          setHistoryIndex(-1) // 如果用户输入，重置索引
-          onHistorySelect?.(null) // 取消高亮
-        }}
-        onKeyDown={handleKeyDown}
-      />
+    <div className="relative w-full">
+      <div className="relative flex items-center">
+        <MagnifyingGlassIcon 
+          className="absolute left-3 w-5 h-5 text-gray-400 pointer-events-none" 
+        />
+        <input
+          type="text"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          onKeyDown={handleKeyDown}
+          placeholder="输入问题..."
+          className="w-full pl-10 pr-12 py-2.5 sm:py-3
+            text-sm sm:text-base
+            rounded-lg border border-gray-200
+            focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent
+            placeholder-gray-400 bg-white shadow-sm"
+        />
+        <button
+          onClick={onSubmit}
+          disabled={!value.trim()}
+          className={`absolute right-2 p-1.5 sm:p-2 rounded-md 
+            transition-colors duration-200
+            ${value.trim()
+              ? 'text-blue-500 hover:bg-blue-50'
+              : 'text-gray-400'
+            }`}
+        >
+          <PaperAirplaneIcon className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+      </div>
     </div>
   )
 }
