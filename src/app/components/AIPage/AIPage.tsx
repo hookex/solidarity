@@ -3,70 +3,30 @@
 import React, { useState, useEffect, useRef } from 'react';
 import SearchBar from '@/app/components/SearchBar/SearchBar';
 import MessageList from '@/app/components/MessageList/MessageList';
+import { useAISearchStore, initializeAISearchStore } from '@/app/store/AISearchStore';
+import { AIService, generateId, getCurrentTimestamp } from '@/app/services/api';
 
-type MessageData = {
-  id: number;
-  role: 'user' | 'system';
-  content: string; // Markdown 格式内容
-  timestamp: string; // 添加时间戳字段
-};
-
-const SESSION_STORAGE_KEY = 'ai_session_id';
 const CONTEXT_STORAGE_KEY = 'ai_chat_context';
-
-// 生成唯一 sessionId 的工具函数
-const generateSessionId = () =>
-  `session_${Date.now()}_${Math.random().toString(36).substring(2, 15)}`;
-
-async function fetchStream(
-  sessionId: string,
-  prompt: string,
-  context: MessageData[],
-  onChunk: (chunk: string) => void
-) {
-  const response = await fetch('/api/ai', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ sessionId, prompt, context }),
-  });
-
-  if (!response.body) throw new Error('No response body');
-
-  const reader = response.body.getReader();
-  const decoder = new TextDecoder();
-
-  while (true) {
-    const { value, done } = await reader.read();
-    if (done) break;
-    const chunk = decoder.decode(value);
-    onChunk(chunk);
-  }
-}
 
 export default function AIPage() {
   const [input, setInput] = useState<string>('');
-  const [messages, setMessages] = useState<MessageData[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [highlightIndex, setHighlightIndex] = useState<number | null>(null); // 当前高亮索引
   const chatWindowRef = useRef<HTMLDivElement>(null);
+  const currentMessageRef = useRef<string>('');
+  
+  const { 
+    messages, 
+    sessionId, 
+    isLoading, 
+    highlightIndex,
+    addMessage,
+    updateLastMessage,
+    setIsLoading,
+    setHighlightIndex 
+  } = useAISearchStore();
 
-  const [sessionId, setSessionId] = useState<string | null>(null);
-
-  // 初始化 sessionId 和消息上下文
+  // 初始化 store
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      let storedSessionId = localStorage.getItem(SESSION_STORAGE_KEY);
-      if (!storedSessionId) {
-        storedSessionId = generateSessionId();
-        localStorage.setItem(SESSION_STORAGE_KEY, storedSessionId);
-      }
-      setSessionId(storedSessionId);
-
-      const storedContext = localStorage.getItem(CONTEXT_STORAGE_KEY);
-      if (storedContext) {
-        setMessages(JSON.parse(storedContext));
-      }
-    }
+    initializeAISearchStore();
   }, []);
 
   // 更新本地存储
@@ -76,72 +36,54 @@ export default function AIPage() {
     }
   }, [messages]);
 
-  // 滚动到高亮消息
-  useEffect(() => {
-    if (chatWindowRef.current && highlightIndex !== null) {
-      const messageElement = chatWindowRef.current.querySelector(
-        `[data-index="${highlightIndex}"]`
-      ) as HTMLDivElement;
-      if (messageElement) {
-        messageElement.scrollIntoView({
-          behavior: 'smooth',
-          block: 'center',
-        });
-      }
-    }
-  }, [highlightIndex]);
-
-  const generateId = () => Math.floor(Math.random() * 1000000);
-
-  const getCurrentTimestamp = () => {
-    const now = new Date();
-    return now.toISOString().replace('T', ' ').substring(0, 19); // 格式化为 YYYY-MM-DD HH:mm:ss
-  };
-
   const handleSearch = async () => {
     const prompt = input.trim();
     if (!prompt) return;
 
     setInput('');
     setIsLoading(true);
+    currentMessageRef.current = '';
 
-    const userMessage: MessageData = {
+    // 添加用户消息
+    addMessage({
       id: generateId(),
       role: 'user',
       content: prompt,
-      timestamp: getCurrentTimestamp(), // 添加时间戳
-    };
-    setMessages((prev) => [userMessage, ...prev]); // 新消息插入到数组顶部
+      timestamp: getCurrentTimestamp(),
+    });
 
-    const systemMessage: MessageData = {
+    // 添加系统消息
+    addMessage({
       id: generateId(),
       role: 'system',
       content: '',
-      timestamp: getCurrentTimestamp(), // 添加时间戳
-    };
-    setMessages((prev) => [systemMessage, ...prev]); // 系统消息插入到数组顶部
+      timestamp: getCurrentTimestamp(),
+    });
 
     try {
-      await fetchStream(sessionId || '', prompt, messages, (chunk) => {
-        setMessages((prev) => {
-          const updatedMessage = {
-            ...prev[0],
-            content: prev[0].content + chunk,
-          };
-          return [updatedMessage, ...prev.slice(1)]; // 更新顶部消息
-        });
-      });
+      const result = await AIService.searchStream(
+        {
+          sessionId: sessionId || '',
+          prompt,
+          context: messages,
+        },
+        (chunk) => {
+          currentMessageRef.current += chunk;
+          updateLastMessage(currentMessageRef.current);
+        }
+      );
+
+      if (result.error) {
+        throw new Error(result.error);
+      }
     } catch (error) {
       console.error('Error fetching data:', error);
-      setMessages((prev) => [
-        {
-          id: generateId(),
-          role: 'system',
-          content: '发生错误：无法获取数据。',
-          timestamp: getCurrentTimestamp(), // 添加时间戳
-        },
-        ...prev,
-      ]);
+      addMessage({
+        id: generateId(),
+        role: 'system',
+        content: '发生错误：无法获取数据。',
+        timestamp: getCurrentTimestamp(),
+      });
     } finally {
       setIsLoading(false);
     }
@@ -158,11 +100,10 @@ export default function AIPage() {
           value={input}
           onChange={setInput}
           onSubmit={handleSearch}
-          onHistorySelect={(index) => setHighlightIndex(index)} // 高亮回调
+          onHistorySelect={setHighlightIndex}
         />
       </div>
 
-      {/* 使用 MessageList 渲染消息 */}
       <MessageList
         messages={messages}
         highlightIndex={highlightIndex}

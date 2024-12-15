@@ -1,13 +1,7 @@
 import React from 'react';
 import Masonry from 'react-masonry-css';
 import Message from '../Message/Message';
-
-interface MessageData {
-  id: number;
-  role: 'user' | 'system';
-  content: string;
-  timestamp?: string; // 增加时间戳字段
-}
+import { MessageData } from '@/app/store/AISearchStore';
 
 interface MessageListProps {
   messages: MessageData[];
