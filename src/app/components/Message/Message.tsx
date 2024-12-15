@@ -26,10 +26,10 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
   return (
     <div
       className={`p-4 rounded-lg shadow-sm relative ${
-        isHighlighted ? 'bg-blue-100 ' : 'bg-white '
-      } ${role === 'user' ? 'self-end' : 'self-start'}`}
+        isHighlighted ? 'bg-blue-50/80' : 'bg-white'
+      } ${role === 'user' ? 'self-end' : 'self-start'} transition-colors duration-200`}
     >
-      <div style={{ maxWidth: '90%', minWidth: '250px' }}>
+      <div className="w-full" style={{ maxWidth: '100%' }}>
         <div className="mb-6">
           {isSystemThinking ? (
             <div className="flex items-center text-gray-400">

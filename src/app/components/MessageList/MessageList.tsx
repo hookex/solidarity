@@ -62,18 +62,18 @@ const MessageList: React.FC<MessageListProps> = ({
     >
       <Masonry
         breakpointCols={breakpointColumns}
-        className="flex -ml-4 w-auto"
-        columnClassName="pl-4 bg-clip-padding"
+        className="flex -ml-2 w-auto"
+        columnClassName="pl-2 bg-clip-padding"
       >
         {transitions((style, message, _, index) => (
           <animated.div
             key={message.id}
             style={style}
             data-index={index}
-            className="mb-4"
+            className="mb-2"
           >
-            <div className={`rounded-lg border-0 shadow ${
-              highlightIndex === index ? 'bg-blue-100 border-2 border-blue-500' : 'bg-white border border-gray-300'
+            <div className={`rounded-lg shadow ${
+              highlightIndex === index ? 'bg-blue-50/80' : 'bg-white border border-gray-200'
             }`}>
               <Message
                 role={message.role}
