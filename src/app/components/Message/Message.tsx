@@ -72,8 +72,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       className={`p-2 sm:p-3 rounded-lg shadow-sm relative 
         ${isHighlighted ? 'bg-blue-50/80' : 'bg-white'}
         ${role === 'user' ? 'self-end' : 'self-start'} 
-        transition-colors duration-200
-        max-w-[92%] sm:max-w-[85%]`}
+        transition-colors duration-200`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
@@ -105,30 +104,40 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
             ) : (
               <ReactMarkdown
                 rehypePlugins={[rehypeHighlight]}
-                className="prose prose-sm sm:prose-base prose-slate max-w-none break-words leading-relaxed"
+                className="prose prose-sm sm:prose-base prose-slate max-w-none break-words leading-relaxed
+                  [&>*:last-child]:mb-0"
                 components={{
-                  // 调整标题间距
+                  // 调整标题间距和留白
                   h1: ({ children }) => (
-                    <h1 className="font-display text-xl font-bold mb-3 text-gray-900 tracking-tight">{children}</h1>
+                    <h1 className="font-display text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900 tracking-tight">{children}</h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="font-display text-lg font-bold mb-2 text-gray-800 tracking-tight">{children}</h2>
+                    <h2 className="font-display text-base sm:text-lg font-bold mb-1.5 sm:mb-2 text-gray-800 tracking-tight">{children}</h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="font-display text-base font-bold mb-1.5 text-gray-800 tracking-tight">{children}</h3>
+                    <h3 className="font-display text-sm sm:text-base font-bold mb-1 sm:mb-1.5 text-gray-800 tracking-tight">{children}</h3>
                   ),
-                  // 减小段落间距
+                  // 减小段落间距和留白
                   p: ({ children }) => (
-                    <p className="text-[13px] sm:text-[14px] mb-2 text-gray-800 leading-relaxed">
+                    <p className="text-[13px] sm:text-[14px] mb-1.5 sm:mb-2 text-gray-800 leading-relaxed tracking-tight">
                       {children}
                     </p>
                   ),
-                  // 代码使用正常字重
+                  // 优化列表间距
+                  ul: ({ children }) => (
+                    <ul className="list-disc list-inside mb-1.5 sm:mb-2.5 space-y-1 text-[13px] sm:text-[14px] text-gray-800">{children}</ul>
+                  ),
+                  ol: ({ children }) => (
+                    <ol className="list-decimal list-inside mb-1.5 sm:mb-2.5 space-y-1 text-[13px] sm:text-[14px] text-gray-800">{children}</ol>
+                  ),
+                  // 优化代码块
                   code: ({ inline, className, children, ...props }: CodeBlockProps) => {
                     return (
                       <code
                         className={`${className || ''} font-mono ${
-                          inline ? 'bg-gray-100 rounded px-1.5 py-0.5 text-[13px] text-gray-900' : ''
+                          inline 
+                            ? 'bg-gray-100 rounded px-1 py-0.5 text-[12px] sm:text-[13px] text-gray-900' 
+                            : 'block p-2 sm:p-3 my-1 sm:my-2 bg-gray-50 rounded-md overflow-x-auto'
                         }`}
                         {...props}
                       >
@@ -136,13 +145,6 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
                       </code>
                     );
                   },
-                  // 列表使用正常字重
-                  ul: ({ children }) => (
-                    <ul className="list-disc list-inside mb-2.5 space-y-1.5 text-gray-800 text-[14px]">{children}</ul>
-                  ),
-                  ol: ({ children }) => (
-                    <ol className="list-decimal list-inside mb-2.5 space-y-1.5 text-gray-800 text-[14px]">{children}</ol>
-                  ),
                   // 链接使用正常字重
                   a: ({ children, href }) => (
                     <a
@@ -162,7 +164,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
           </div>
         )}
 
-        {/* 底部信息栏 */}
+        {/* 底部信息栏 - 减小间距 */}
         <div className="flex items-center gap-1 sm:gap-1.5 text-[10px] sm:text-[11px] text-gray-400 mt-1 pt-1 border-t border-gray-100">
           {/* 模型名称 */}
           {modelName && role === 'system' && (
