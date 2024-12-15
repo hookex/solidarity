@@ -53,7 +53,13 @@ async function createModelStream(
 		for await (const part of openaiStream) {
 			const content = part.choices[0]?.delta?.content || '';
 			if (content) {
-				assistantResponse += content;
+				// 调试日志
+				console.log('Sending response:', { 
+					model: modelConfig.model, 
+					modelName: modelConfig.name,
+					content 
+				});
+				
 				controller.enqueue(encoder.encode(JSON.stringify({
 					model: modelConfig.model,
 					modelName: modelConfig.name,

@@ -61,6 +61,9 @@ export default function AIPage() {
           context: messages,
         },
         (modelId, chunk, modelName) => {
+          // 调试日志
+          console.log('Received message:', { modelId, chunk, modelName });
+          
           if (!modelMessages.has(modelId)) {
             const messageId = generateId();
             modelMessages.set(modelId, messageId);

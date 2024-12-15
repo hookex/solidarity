@@ -24,7 +24,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       setTimeout(() => setIsCopied(false), 2000);
     });
   };
-
+  
   return (
     <div
       className={`p-4 rounded-lg shadow-sm relative ${
@@ -34,7 +34,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       onMouseLeave={() => setIsHovered(false)}
     >
       {modelName && role === 'system' && (
-        <div className="absolute top-2 right-2 text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+        <div className="absolute top-2 right-2 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded transition-colors duration-200">
           {modelName}
         </div>
       )}
@@ -105,12 +105,22 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
           )}
         </div>
 
-        {/* 时间戳 */}
-        {timestamp && (
-          <div className="absolute bottom-2 left-2 text-xs text-gray-400 whitespace-nowrap font-medium">
-            {timestamp}
-          </div>
-        )}
+        {/* 底部信息栏 */}
+        <div className="flex justify-between items-center text-xs text-gray-400 mt-2 pt-2 border-t border-gray-100">
+          {/* 左侧时间戳 */}
+          {timestamp && (
+            <div className="font-medium">
+              {timestamp}
+            </div>
+          )}
+          
+          {/* 右侧模型名称 */}
+          {modelName && role === 'system' && (
+            <div className="font-medium text-gray-500">
+              {modelName}
+            </div>
+          )}
+        </div>
 
         {/* 复制按钮 */}
         {content && (

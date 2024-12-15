@@ -79,6 +79,7 @@ const MessageList: React.FC<MessageListProps> = ({
                 content={message.content}
                 isHighlighted={highlightIndex === index}
                 timestamp={message.timestamp}
+                modelName={message.modelName}
               />
             </div>
           </animated.div>
