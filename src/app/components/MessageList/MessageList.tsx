@@ -1,6 +1,6 @@
 import React from 'react';
 import Masonry from 'react-masonry-css';
-import Message from '@/app/components/message';
+import Message from '../Message/Message';
 
 interface MessageData {
   id: number;

@@ -1,8 +1,8 @@
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
-import SearchBar from '@/app/components/SearchBar';
-import MessageList from '@/app/components/MessageList';
+import SearchBar from '@/app/components/SearchBar/SearchBar';
+import MessageList from '@/app/components/MessageList/MessageList';
 
 type MessageData = {
   id: number;

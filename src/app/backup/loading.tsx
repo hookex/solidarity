@@ -4,9 +4,9 @@ import {useSpring, animated} from '@react-spring/web';
 import {useAsync} from 'react-use';
 import {useDebounce} from 'use-debounce';
 
-import FullScreenLayout from "@/app/components/full-screen-layout";
-import LoadingPage from "@/app/components/loading-page";
-import AIPage from "@/app/components/ai";
+import FullScreenLayout from "../components/FullScreenLayout/FullScreenLayout";
+import LoadingPage from "../components/LoadingPage/LoadingPage";
+import AIPage from "../components/AIPage/AIPage";
 import "@arco-design/web-react/dist/css/arco.css";
 
 type Data = { message: string };
