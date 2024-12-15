@@ -29,7 +29,8 @@
     "rehype-highlight": "^7.0.1",
     "three": "^0.170.0",
     "use-debounce": "^10.0.4",
-    "uuid": "^11.0.3"
+    "uuid": "^11.0.3",
+    "zustand": "^5.0.2"
   },
   "devDependencies": {
     "@tailwindcss/typography": "^0.5.15",
