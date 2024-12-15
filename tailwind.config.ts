@@ -23,7 +23,9 @@ export default {
         },
       },
       fontFamily: {
-        sans: ["InterVariable", ...defaultTheme.fontFamily.sans],
+        sans: ["var(--font-noto-sans)", ...defaultTheme.fontFamily.sans],
+        display: ["var(--font-montserrat)", ...defaultTheme.fontFamily.sans],
+        mono: ["var(--font-fira-code)", ...defaultTheme.fontFamily.mono],
       },
     },
   },

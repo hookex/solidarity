@@ -45,31 +45,43 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
               rehypePlugins={[rehypeHighlight]}
               className="prose prose-slate max-w-none break-words leading-relaxed"
               components={{
-                // 自定义标题样式
-                h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 text-gray-900">{children}</h1>,
-                h2: ({ children }) => <h2 className="text-xl font-bold mb-3 text-gray-800">{children}</h2>,
-                h3: ({ children }) => <h3 className="text-lg font-semibold mb-2 text-gray-800">{children}</h3>,
-                // 自定义段落样式
-                p: ({ children }) => <p className="mb-4 text-gray-700 text-[15px] leading-relaxed">{children}</p>,
-                // 自定义列表样式
-                ul: ({ children }) => <ul className="list-disc list-inside mb-4 space-y-2">{children}</ul>,
-                ol: ({ children }) => <ol className="list-decimal list-inside mb-4 space-y-2">{children}</ol>,
-                // 自定义代码块样式
+                // 标题保持粗体，但调整大小
+                h1: ({ children }) => (
+                  <h1 className="font-display text-xl font-bold mb-4 text-gray-900 tracking-tight">{children}</h1>
+                ),
+                h2: ({ children }) => (
+                  <h2 className="font-display text-lg font-bold mb-3 text-gray-800 tracking-tight">{children}</h2>
+                ),
+                h3: ({ children }) => (
+                  <h3 className="font-display text-base font-bold mb-2 text-gray-800 tracking-tight">{children}</h3>
+                ),
+                // 正文使用 14px 字体，不加粗
+                p: ({ children }) => (
+                  <p className="font-sans mb-4 text-gray-800 text-[14px] leading-relaxed tracking-tight">{children}</p>
+                ),
+                // 代码使用正常字重
                 code: ({ node, inline, className, children, ...props }) => (
                   <code
-                    className={`${className} ${
-                      inline ? 'bg-gray-100 rounded px-1 py-0.5 text-sm text-gray-800' : ''
+                    className={`${className} font-mono ${
+                      inline ? 'bg-gray-100 rounded px-1.5 py-0.5 text-[13px] text-gray-900' : ''
                     }`}
                     {...props}
                   >
                     {children}
                   </code>
                 ),
-                // 自定义链接样式
+                // 列表使用正常字重
+                ul: ({ children }) => (
+                  <ul className="list-disc list-inside mb-4 space-y-2 text-gray-800 text-[14px]">{children}</ul>
+                ),
+                ol: ({ children }) => (
+                  <ol className="list-decimal list-inside mb-4 space-y-2 text-gray-800 text-[14px]">{children}</ol>
+                ),
+                // 链接使用正常字重
                 a: ({ children, href }) => (
                   <a
                     href={href}
-                    className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 hover:decoration-blue-500 transition-colors"
+                    className="text-blue-700 hover:text-blue-900 underline decoration-blue-400 hover:decoration-blue-600 transition-colors"
                     target="_blank"
                     rel="noopener noreferrer"
                   >
