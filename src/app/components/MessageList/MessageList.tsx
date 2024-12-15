@@ -26,8 +26,7 @@ const MessageList: React.FC<MessageListProps> = ({
   }, []);
 
   const breakpointColumns = {
-    default: 3,
-    768: 1,
+    default: 1,
   };
 
   const filteredMessages = messages.filter(item => 
@@ -54,7 +53,7 @@ const MessageList: React.FC<MessageListProps> = ({
   return (
     <div
       ref={chatWindowRef}
-      className="p-6 overflow-y-auto mx-auto w-full"
+      className="p-6 overflow-y-auto mx-auto w-full max-w-3xl"
       style={{ 
         height: 'calc(100vh - 120px)',
         visibility: isLayoutReady ? 'visible' : 'hidden'
@@ -62,8 +61,8 @@ const MessageList: React.FC<MessageListProps> = ({
     >
       <Masonry
         breakpointCols={breakpointColumns}
-        className="flex -ml-2 w-auto"
-        columnClassName="pl-2 bg-clip-padding"
+        className="flex w-auto"
+        columnClassName="bg-clip-padding"
       >
         {transitions((style, message, _, index) => (
           <animated.div
