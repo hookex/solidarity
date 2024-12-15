@@ -50,47 +50,83 @@ const MessageList: React.FC<MessageListProps> = ({
     config: config.gentle,
   });
 
+  // 按问题分组消息
+  const groupedMessages = messages.reduce((groups, message) => {
+    if (message.role === 'user') {
+      // 创建新的问题组
+      groups.push({
+        question: message,
+        answers: []
+      });
+    } else if (message.role === 'system' && groups.length > 0) {
+      // 将回答添加到最近的问题组
+      groups[groups.length - 1].answers.push(message);
+    }
+    return groups;
+  }, [] as { question: MessageData; answers: MessageData[] }[]);
+
   return (
     <div
       ref={chatWindowRef}
       className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl"
       style={{ height: 'calc(100vh - 120px)' }}
     >
-      <Masonry
-        breakpointCols={breakpointColumns}
-        className="flex w-auto"
-        columnClassName="bg-clip-padding"
-      >
-        {transitions((style, message, _, index) => (
-          <animated.div
-            key={message.id}
-            style={style}
-            data-index={index}
-            className="mb-2"
-          >
-            <div className={`rounded-lg shadow ${
-              highlightIndex === index ? 'bg-blue-50/80' : 'bg-white border border-gray-200'
-            }`}>
-              <Message
-                role={message.role}
-                content={message.content}
-                isHighlighted={highlightIndex === index}
-                timestamp={message.timestamp}
-                modelName={message.modelName}
-              />
+      {groupedMessages.map((group, groupIndex) => (
+        <div key={group.question.id} className="relative">
+          {/* 分割线 */}
+          {groupIndex > 0 && (
+            <div className="absolute -top-3 left-0 right-0 flex items-center">
+              <div className="flex-grow border-t border-gray-200"></div>
             </div>
-          </animated.div>
-        ))}
-      </Masonry>
+          )}
 
-      {isLoading && (
-        <animated.div
-          style={loadingSpring}
-          className="flex justify-center items-center col-span-2 text-gray-500"
-        >
-          <div className="loader">加载中...</div>
-        </animated.div>
-      )}
+          <div className="mb-8 pt-3">
+            {/* 问题 */}
+            <div className="text-sm sm:text-base text-gray-700 mb-3 px-1 font-medium">
+              {group.question.content}
+            </div>
+
+            {/* 回答卡片 */}
+            <Masonry
+              breakpointCols={breakpointColumns}
+              className="flex w-auto"
+              columnClassName="bg-clip-padding"
+            >
+              {group.answers.map((answer, index) => (
+                <animated.div
+                  key={answer.id}
+                  style={transitions[index]}
+                  data-index={index}
+                  className="mb-2"
+                >
+                  <div className={`rounded-lg shadow ${
+                    highlightIndex === index ? 'bg-blue-50/80' : 'bg-white border border-gray-200'
+                  }`}>
+                    <Message
+                      role={answer.role}
+                      content={answer.content}
+                      isHighlighted={highlightIndex === index}
+                      timestamp={answer.timestamp}
+                      modelName={answer.modelName}
+                      type={answer.type}
+                    />
+                  </div>
+                </animated.div>
+              ))}
+            </Masonry>
+
+            {/* 加载状态 */}
+            {isLoading && groupIndex === groupedMessages.length - 1 && (
+              <animated.div
+                style={loadingSpring}
+                className="flex justify-center items-center text-gray-500 mt-2"
+              >
+                <div className="loader">加载中...</div>
+              </animated.div>
+            )}
+          </div>
+        </div>
+      ))}
     </div>
   );
 };

@@ -42,9 +42,10 @@ export default function AIPage() {
     setInput('');
     setIsLoading(true);
 
-    // 添加用户消息
+    // 添加用户问题
+    const questionId = generateId();
     addMessage({
-      id: generateId(),
+      id: questionId,
       role: 'user',
       content: prompt,
       timestamp: getCurrentTimestamp(),
@@ -74,6 +75,7 @@ export default function AIPage() {
               timestamp: getCurrentTimestamp(),
               modelId,
               modelName,
+              questionId, // 添加关联的问题ID
             });
           }
           

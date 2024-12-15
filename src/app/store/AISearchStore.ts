@@ -11,6 +11,7 @@ export type MessageData = {
   modelId?: string; // 添加可选的模型标识
   modelName?: string; // 添加模型名称
   type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';
+  questionId?: number; // 添加关联的问题ID
 };
 
 /**
