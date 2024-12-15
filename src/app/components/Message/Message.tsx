@@ -33,14 +33,8 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      {modelName && role === 'system' && (
-        <div className="absolute top-2 right-2 text-xs font-medium text-gray-500 bg-gray-100 hover:bg-gray-200 px-2 py-1 rounded transition-colors duration-200">
-          {modelName}
-        </div>
-      )}
-
       <div className="w-full" style={{ maxWidth: '100%' }}>
-        <div className="mb-6">
+        <div className="mb-2">
           {isSystemThinking ? (
             <div className="flex items-center text-gray-400">
               <div className="flex space-x-1">
@@ -106,38 +100,38 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
         </div>
 
         {/* 底部信息栏 */}
-        <div className="flex justify-between items-center text-xs text-gray-400 mt-2 pt-2 border-t border-gray-100">
-          {/* 左侧时间戳 */}
-          {timestamp && (
-            <div className="font-medium">
-              {timestamp}
-            </div>
-          )}
-          
-          {/* 右侧模型名称 */}
+        <div className="flex items-center gap-3 text-xs text-gray-400 mt-2 pt-2 border-t border-gray-100">
+          {/* 模型名称 */}
           {modelName && role === 'system' && (
             <div className="font-medium text-gray-500">
               {modelName}
             </div>
           )}
-        </div>
+          
+          {/* 时间戳 */}
+          {timestamp && (
+            <div className="font-medium">
+              {timestamp}
+            </div>
+          )}
 
-        {/* 复制按钮 */}
-        {content && (
-          <button
-            onClick={handleCopy}
-            className={`absolute bottom-2 right-2 p-1 rounded-full focus:outline-none transition-all duration-200 ${
-              isCopied ? 'scale-110' : 'hover:scale-110'
-            } ${isHovered ? 'opacity-50 hover:opacity-100' : 'opacity-0'}`}
-            aria-label={isCopied ? '已复制' : '复制内容'}
-          >
-            {isCopied ? (
-              <CheckCircleIcon className="h-4 w-4 text-green-500" />
-            ) : (
-              <ClipboardIcon className="h-4 w-4 text-gray-500" />
-            )}
-          </button>
-        )}
+          {/* 复制按钮 */}
+          {content && (
+            <button
+              onClick={handleCopy}
+              className={`ml-auto p-1 rounded-full focus:outline-none transition-all duration-200 ${
+                isCopied ? 'scale-110' : 'hover:scale-110'
+              } ${isHovered ? 'opacity-50 hover:opacity-100' : 'opacity-0'}`}
+              aria-label={isCopied ? '已复制' : '复制内容'}
+            >
+              {isCopied ? (
+                <CheckCircleIcon className="h-4 w-4 text-green-500" />
+              ) : (
+                <ClipboardIcon className="h-4 w-4 text-gray-500" />
+              )}
+            </button>
+          )}
+        </div>
       </div>
     </div>
   );
