@@ -60,7 +60,7 @@ export default function AIPage() {
           prompt,
           context: messages,
         },
-        (modelId, chunk) => {
+        (modelId, chunk, modelName) => {
           if (!modelMessages.has(modelId)) {
             const messageId = generateId();
             modelMessages.set(modelId, messageId);
@@ -70,6 +70,7 @@ export default function AIPage() {
               content: '',
               timestamp: getCurrentTimestamp(),
               modelId,
+              modelName,
             });
           }
           

@@ -5,15 +5,18 @@ import { NextRequest, NextResponse } from 'next/server';
 const AI_MODELS = {
 	douBao: {
 		model: 'ep-20241203130210-txrtw',
-		systemPrompt: '豆包 AI'
+		systemPrompt: '豆包 AI',
+		name: '豆包 AI'
 	},
 	bot: {
 		model: 'ep-20241215223428-h6p4b',
-		systemPrompt: 'Moonshot'
+		systemPrompt: 'Moonshot',
+		name: 'Moonshot AI'
 	},
 	zhipu: {
 		model: 'ep-20241215223536-fb4sn',
-		systemPrompt: '智谱'
+		systemPrompt: '智谱',
+		name: '智谱 AI'
 	}
 };
 
@@ -53,6 +56,7 @@ async function createModelStream(
 				assistantResponse += content;
 				controller.enqueue(encoder.encode(JSON.stringify({
 					model: modelConfig.model,
+					modelName: modelConfig.name,
 					content
 				}) + '\n'));
 			}
@@ -65,6 +69,7 @@ async function createModelStream(
 		console.error(`Error with model ${modelConfig.model}:`, error);
 		controller.enqueue(encoder.encode(JSON.stringify({
 			model: modelConfig.model,
+			modelName: modelConfig.name,
 			error: 'Error occurred while processing the request.'
 		}) + '\n'));
 	}

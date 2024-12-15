@@ -9,9 +9,10 @@ interface MessageProps {
   content: string;
   isHighlighted?: boolean;
   timestamp?: string;
+  modelName?: string;
 }
 
-const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp }) => {
+const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp, modelName }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const isEmpty = !content || content.trim() === '';
@@ -32,6 +33,12 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {modelName && role === 'system' && (
+        <div className="absolute top-2 right-2 text-xs font-medium text-gray-500 bg-gray-100 px-2 py-1 rounded">
+          {modelName}
+        </div>
+      )}
+
       <div className="w-full" style={{ maxWidth: '100%' }}>
         <div className="mb-6">
           {isSystemThinking ? (

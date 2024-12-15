@@ -9,6 +9,7 @@ export type MessageData = {
   content: string;     // 消息内容（Markdown格式）
   timestamp: string;   // 消息时间戳
   modelId?: string; // 添加可选的模型标识
+  modelName?: string; // 添加模型名称
 };
 
 /**
