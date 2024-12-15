@@ -7,8 +7,8 @@ import { ClipboardIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
 interface MessageProps {
   role: 'user' | 'system';
   content: string;
-  isHighlighted?: boolean; // 高亮标志
-  timestamp?: string; // 时间戳
+  isHighlighted?: boolean;
+  timestamp?: string;
 }
 
 const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp }) => {
@@ -27,21 +27,32 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
         isHighlighted ? 'bg-blue-100 ' : 'bg-white '
       } ${role === 'user' ? 'self-end' : 'self-start'}`}
       style={{
-        maxWidth: '90%', // 限制消息宽度为父容器的 90%
-        minWidth: '250px', // 设置消息卡片的最小宽度
+        maxWidth: '90%',
+        minWidth: '250px',
       }}
     >
-      {/* 使用 ReactMarkdown 渲染内容 */}
+      {/* 消息内容 */}
       <div className="mb-6">
         {content ? (
           <ReactMarkdown
             rehypePlugins={[rehypeHighlight]}
-            className="break-words" // 确保内容自动换行
+            className="break-words"
           >
             {content}
           </ReactMarkdown>
+        ) : role === 'system' ? (
+          <div className="flex items-center text-gray-400">
+            <div className="animate-pulse">
+              <div className="flex space-x-1">
+                <div className="h-1 w-1 bg-gray-400 rounded-full animate-bounce"></div>
+                <div className="h-1 w-1 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
+                <div className="h-1 w-1 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
+              </div>
+            </div>
+            <span className="ml-2">思考中</span>
+          </div>
         ) : (
-          <p className="text-gray-400">空</p> // 空状态显示“暂无内容”
+          <p className="text-gray-400">空</p>
         )}
       </div>
 
@@ -53,17 +64,19 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       )}
 
       {/* 复制按钮 */}
-      <button
-        onClick={handleCopy}
-        className="absolute bottom-2 right-2 p-1 rounded-full focus:outline-none transition-opacity duration-300 opacity-50 hover:opacity-100"
-        aria-label={isCopied ? '已复制' : '复制内容'}
-      >
-        {isCopied ? (
-          <CheckCircleIcon className="h-4 w-4 text-green-500" />
-        ) : (
-          <ClipboardIcon className="h-4 w-4 text-gray-500" />
-        )}
-      </button>
+      {content && (
+        <button
+          onClick={handleCopy}
+          className="absolute bottom-2 right-2 p-1 rounded-full focus:outline-none transition-opacity duration-300 opacity-50 hover:opacity-100"
+          aria-label={isCopied ? '已复制' : '复制内容'}
+        >
+          {isCopied ? (
+            <CheckCircleIcon className="h-4 w-4 text-green-500" />
+          ) : (
+            <ClipboardIcon className="h-4 w-4 text-gray-500" />
+          )}
+        </button>
+      )}
     </div>
   );
 };
