@@ -78,13 +78,26 @@ async function createModelStream(
 			const data = await response.json();
 			console.log(`${modelConfig.name} - Response data:`, data);
 			
+			// 处理搜索状态
+			if (data.metadata?.search_info) {
+				const searchMessage = {
+					model: modelConfig.model,
+					modelName: modelConfig.name,
+					content: '正在搜索相关信息...',
+					type: 'search_status'
+				};
+				console.log(`${modelConfig.name} - Sending search status:`, searchMessage);
+				controller.enqueue(encoder.encode(JSON.stringify(searchMessage) + '\n'));
+			}
+			
 			const content = data.choices?.[0]?.message?.content || '';
 			if (content) {
 				const message = {
 					model: modelConfig.model,
 					modelName: modelConfig.name,
 					content,
-					references: data.references
+					references: data.references,
+					type: 'answer'
 				};
 				console.log(`${modelConfig.name} - Sending message:`, message);
 				controller.enqueue(encoder.encode(JSON.stringify(message) + '\n'));

@@ -10,6 +10,7 @@ export type MessageData = {
   timestamp: string;   // 消息时间戳
   modelId?: string; // 添加可选的模型标识
   modelName?: string; // 添加模型名称
+  type?: 'search_status' | 'answer';
 };
 
 /**
