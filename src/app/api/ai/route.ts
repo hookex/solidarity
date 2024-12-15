@@ -49,7 +49,7 @@ async function createModelStream(
 			stream: true,
 		});
 
-		let assistantResponse = '';
+		const assistantResponse = '';
 		for await (const part of openaiStream) {
 			const content = part.choices[0]?.delta?.content || '';
 			if (content) {
