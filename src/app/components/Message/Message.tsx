@@ -13,6 +13,7 @@ interface MessageProps {
 
 const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp }) => {
   const [isCopied, setIsCopied] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const isEmpty = !content || content.trim() === '';
   const isSystemThinking = role === 'system' && isEmpty;
 
@@ -28,6 +29,8 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
       className={`p-4 rounded-lg shadow-sm relative ${
         isHighlighted ? 'bg-blue-50/80' : 'bg-white'
       } ${role === 'user' ? 'self-end' : 'self-start'} transition-colors duration-200`}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
     >
       <div className="w-full" style={{ maxWidth: '100%' }}>
         <div className="mb-6">
@@ -108,7 +111,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
             onClick={handleCopy}
             className={`absolute bottom-2 right-2 p-1 rounded-full focus:outline-none transition-all duration-200 ${
               isCopied ? 'scale-110' : 'hover:scale-110'
-            } opacity-50 hover:opacity-100`}
+            } ${isHovered ? 'opacity-50 hover:opacity-100' : 'opacity-0'}`}
             aria-label={isCopied ? '已复制' : '复制内容'}
           >
             {isCopied ? (
