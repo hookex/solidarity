@@ -4,21 +4,21 @@ import { NextRequest, NextResponse } from 'next/server';
 const AI_MODELS = {
 	douBao: {
 		model: 'bot-20241214140237-g9dqh',
-		systemPrompt: '你是简洁的助手。回答限140字内，不确定的直接说不知道。有信息来源要标注。',
+		systemPrompt: '你是简洁的助手。回答限140字内，不确定的直接说不知道，别啰嗦，少废话。有信息来源要标注。',
 		name: '豆包 AI',
 		apiPath: '/bots/chat/completions',
 		stream: false
 	},
 	bot: {
 		model: 'ep-20241215223428-h6p4b',
-		systemPrompt: '你是 Moonshot AI。回答限140字内，不确定就说不知道。引用需标明来源。',
+		systemPrompt: '你是 Moonshot AI。回答限140字内，不确定就说不知道，别啰嗦，少废话。引用需标明来源。',
 		name: 'Moonshot AI',
 		apiPath: '/chat/completions',
 		stream: true
 	},
 	zhipu: {
 		model: 'ep-20241215223536-fb4sn',
-		systemPrompt: '你是智谱助手。回答限140字内，不确定就说不知道。重要信息标注来源。',
+		systemPrompt: '你是智谱助手。回答限140字内，不确定就说不知道，别啰嗦，少废话。重要信息标注来源。',
 		name: '智谱 AI',
 		apiPath: '/chat/completions',
 		stream: true
