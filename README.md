@@ -1,55 +1,71 @@
+# AI Search
+
 [![Deploy Solidarity App to ECS](https://github.com/hookex/solidarity/actions/workflows/nextjs.yml/badge.svg)](https://github.com/hookex/solidarity/actions/workflows/nextjs.yml)
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+一个基于多个大语言模型的智能搜索应用，支持实时对话和联网搜索。
 
-# Visit
-https://solidarity-hooke.vercel.app/
-http://101.126.159.154:3000/
+## 特性
 
-# Deploy
-https://vercel.com/cookmycode-gmailcoms-projects/solidarity
-https://github.com/hookex/solidarity/actions
+- 🤖 支持多个大语言模型并行对话
+  - 豆包 AI
+  - Moonshot AI
+  - 智谱 AI
+- 🌐 支持联网实时搜索
+- ⚡️ 流式实时响应
+- 💬 精简准确的回答（限制在140字以内）
+- 🎨 优雅的界面设计
+- 📱 完整的移动端适配
 
-## Getting Started
+## 在线体验
 
-First, run the development server:
+- Vercel: https://solidarity-hooke.vercel.app/
+- 服务器: http://101.126.159.154:3000/
 
+## 本地开发
+
+1. 克隆项目
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/hookex/solidarity.git
+cd solidarity
 ```
 
+2. 安装依赖
+```bash
+npm install
+# 或
+yarn
+```
 
+3. 启动开发服务器
+```bash
+npm run dev
+# 或
+yarn dev
+```
 
+4. 打开浏览器访问 http://localhost:3000
 
+## 技术栈
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- Next.js 14 (App Router)
+- React 18
+- TypeScript
+- Tailwind CSS
+- Zustand (状态管理)
+- 火山方舟 API
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## 部署
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+项目支持多种部署方式：
 
-## Learn More
+- [Vercel](https://vercel.com/new)
+- [Github Actions](https://github.com/hookex/solidarity/actions)
+- Docker (待补充)
 
-To learn more about Next.js, take a look at the following resources:
+## 贡献
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+欢迎提交 Issue 和 Pull Request！
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 许可
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
-
-
-Font: https://fonts.google.com/
-
-Loading: https://cssloaders.github.io/
+MIT License

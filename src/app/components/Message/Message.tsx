@@ -3,6 +3,8 @@ import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';
 import 'highlight.js/styles/github.css';
 import { ClipboardIcon, CheckCircleIcon } from '@heroicons/react/24/outline';
+import type { Components } from 'react-markdown';
+import type { DetailedHTMLProps, HTMLAttributes } from 'react';
 
 interface MessageProps {
   role: 'user' | 'system';
@@ -13,13 +15,16 @@ interface MessageProps {
   type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';
 }
 
-// 添加类型定义
-type CodeProps = {
+// 更精确的类型定义
+type ReactMarkdownProps = Components & {
   node?: any;
+  children?: React.ReactNode;
+};
+
+interface CodeBlockProps extends DetailedHTMLProps<HTMLAttributes<HTMLElement>, HTMLElement> {
   inline?: boolean;
   className?: string;
-  children?: React.ReactNode;
-} & React.HTMLAttributes<HTMLElement>;
+}
 
 const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp, modelName, type }) => {
   const [isCopied, setIsCopied] = useState(false);
@@ -115,16 +120,18 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
                     <p className="font-sans mb-2.5 text-gray-800 text-[14px] leading-relaxed tracking-tight">{children}</p>
                   ),
                   // 代码使用正常字重
-                  code: ({ node, inline, className, children, ...props }: CodeProps) => (
-                    <code
-                      className={`${className} font-mono ${
-                        inline ? 'bg-gray-100 rounded px-1.5 py-0.5 text-[13px] text-gray-900' : ''
-                      }`}
-                      {...props}
-                    >
-                      {children}
-                    </code>
-                  ),
+                  code: ({ inline, className, children, ...props }: CodeBlockProps) => {
+                    return (
+                      <code
+                        className={`${className || ''} font-mono ${
+                          inline ? 'bg-gray-100 rounded px-1.5 py-0.5 text-[13px] text-gray-900' : ''
+                        }`}
+                        {...props}
+                      >
+                        {children}
+                      </code>
+                    );
+                  },
                   // 列表使用正常字重
                   ul: ({ children }) => (
                     <ul className="list-disc list-inside mb-2.5 space-y-1.5 text-gray-800 text-[14px]">{children}</ul>
