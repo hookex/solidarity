@@ -38,12 +38,45 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
                 <div className="h-1 w-1 bg-gray-400 rounded-full animate-bounce [animation-delay:0.2s]"></div>
                 <div className="h-1 w-1 bg-gray-400 rounded-full animate-bounce [animation-delay:0.4s]"></div>
               </div>
-              <span className="ml-2 animate-pulse">思考中</span>
+              <span className="ml-2 animate-pulse font-medium">思考中</span>
             </div>
           ) : (
             <ReactMarkdown
               rehypePlugins={[rehypeHighlight]}
-              className="break-words"
+              className="prose prose-slate max-w-none break-words leading-relaxed"
+              components={{
+                // 自定义标题样式
+                h1: ({ children }) => <h1 className="text-2xl font-bold mb-4 text-gray-900">{children}</h1>,
+                h2: ({ children }) => <h2 className="text-xl font-bold mb-3 text-gray-800">{children}</h2>,
+                h3: ({ children }) => <h3 className="text-lg font-semibold mb-2 text-gray-800">{children}</h3>,
+                // 自定义段落样式
+                p: ({ children }) => <p className="mb-4 text-gray-700 text-[15px] leading-relaxed">{children}</p>,
+                // 自定义列表样式
+                ul: ({ children }) => <ul className="list-disc list-inside mb-4 space-y-2">{children}</ul>,
+                ol: ({ children }) => <ol className="list-decimal list-inside mb-4 space-y-2">{children}</ol>,
+                // 自定义代码块样式
+                code: ({ node, inline, className, children, ...props }) => (
+                  <code
+                    className={`${className} ${
+                      inline ? 'bg-gray-100 rounded px-1 py-0.5 text-sm text-gray-800' : ''
+                    }`}
+                    {...props}
+                  >
+                    {children}
+                  </code>
+                ),
+                // 自定义链接样式
+                a: ({ children, href }) => (
+                  <a
+                    href={href}
+                    className="text-blue-600 hover:text-blue-800 underline decoration-blue-300 hover:decoration-blue-500 transition-colors"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {children}
+                  </a>
+                ),
+              }}
             >
               {content || ''}
             </ReactMarkdown>
@@ -52,7 +85,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
 
         {/* 时间戳 */}
         {timestamp && (
-          <div className="absolute bottom-2 left-2 text-xs text-gray-400 whitespace-nowrap">
+          <div className="absolute bottom-2 left-2 text-xs text-gray-400 whitespace-nowrap font-medium">
             {timestamp}
           </div>
         )}
