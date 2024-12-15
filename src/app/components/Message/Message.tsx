@@ -13,6 +13,14 @@ interface MessageProps {
   type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';
 }
 
+// 添加类型定义
+type CodeProps = {
+  node?: any;
+  inline?: boolean;
+  className?: string;
+  children?: React.ReactNode;
+} & React.HTMLAttributes<HTMLElement>;
+
 const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false, timestamp, modelName, type }) => {
   const [isCopied, setIsCopied] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -107,7 +115,7 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
                     <p className="font-sans mb-2.5 text-gray-800 text-[14px] leading-relaxed tracking-tight">{children}</p>
                   ),
                   // 代码使用正常字重
-                  code: ({ node, inline, className, children, ...props }) => (
+                  code: ({ node, inline, className, children, ...props }: CodeProps) => (
                     <code
                       className={`${className} font-mono ${
                         inline ? 'bg-gray-100 rounded px-1.5 py-0.5 text-[13px] text-gray-900' : ''
