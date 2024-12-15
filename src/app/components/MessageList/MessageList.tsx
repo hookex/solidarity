@@ -1,7 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import Message from '../Message/Message';
 import { MessageData } from '@/app/store/AISearchStore';
+import { useTransition, animated, config, useSpring } from '@react-spring/web';
 
 interface MessageListProps {
   messages: MessageData[];
@@ -11,53 +12,88 @@ interface MessageListProps {
 }
 
 const MessageList: React.FC<MessageListProps> = ({
-                                                   messages,
-                                                   highlightIndex,
-                                                   isLoading,
-                                                   chatWindowRef,
-                                                 }) => {
+  messages,
+  highlightIndex,
+  isLoading,
+  chatWindowRef,
+}) => {
+  // 添加布局初始化状态
+  const [isLayoutReady, setIsLayoutReady] = useState(false);
+
+  useEffect(() => {
+    // 确保在客户端渲染后再显示内容
+    setIsLayoutReady(true);
+  }, []);
+
   const breakpointColumns = {
-    default: 3, // 默认三列布局
-    768: 1, // 小屏幕单列
+    default: 3,
+    768: 1,
   };
 
-  messages = messages.filter(item => item.role === 'system')
+  const filteredMessages = messages.filter(item => 
+    item.role === 'system' && item.content && item.content.trim() !== ''
+  );
+
+  // 消息列表的过渡动画
+  const transitions = useTransition(filteredMessages, {
+    keys: item => item.id,
+    from: { opacity: 0, transform: 'scale(0.9)' },
+    enter: { opacity: 1, transform: 'scale(1)' },
+    leave: { opacity: 0, transform: 'scale(0.9)' },
+    config: config.gentle,
+    immediate: isLayoutReady,
+    initial: { opacity: 1, transform: 'scale(1)' },
+  });
+
+  // 加载动画
+  const loadingSpring = useSpring({
+    opacity: isLoading ? 1 : 0,
+    config: config.gentle,
+  });
 
   return (
     <div
       ref={chatWindowRef}
-      className="p-6 overflow-y-auto mx-auto"
-      style={{ height: 'calc(100vh - 120px)' }}
+      className="p-6 overflow-y-auto mx-auto w-full"
+      style={{ 
+        height: 'calc(100vh - 120px)',
+        visibility: isLayoutReady ? 'visible' : 'hidden'
+      }}
     >
       <Masonry
         breakpointCols={breakpointColumns}
-        className="flex w-auto gap-4"
-        columnClassName="masonry-column"
+        className="flex -ml-4 w-auto"
+        columnClassName="pl-4 bg-clip-padding"
       >
-        {messages.map((message, index) => (
-          <div
+        {transitions((style, message, _, index) => (
+          <animated.div
             key={message.id}
+            style={style}
             data-index={index}
-            className={`rounded-lg border-0 shadow ${
-              highlightIndex === index ? 'bg-blue-100 border-2 border-blue-500' : 'bg-white border border-gray-300'
-            }`}
+            className="mb-4"
           >
-            {/* 渲染单个 Message */}
-            <Message
-              role={message.role}
-              content={message.content}
-              isHighlighted={highlightIndex === index} // 传递高亮信息
-              timestamp={message.timestamp} // 传递时间戳
-            />
-          </div>
+            <div className={`rounded-lg border-0 shadow ${
+              highlightIndex === index ? 'bg-blue-100 border-2 border-blue-500' : 'bg-white border border-gray-300'
+            }`}>
+              <Message
+                role={message.role}
+                content={message.content}
+                isHighlighted={highlightIndex === index}
+                timestamp={message.timestamp}
+              />
+            </div>
+          </animated.div>
         ))}
-
-        {isLoading && (
-          <div className="flex justify-center items-center col-span-2 text-gray-500">
-            <div className="loader">加载中...</div>
-          </div>
-        )}
       </Masonry>
+
+      {isLoading && (
+        <animated.div
+          style={loadingSpring}
+          className="flex justify-center items-center col-span-2 text-gray-500"
+        >
+          <div className="loader">加载中...</div>
+        </animated.div>
+      )}
     </div>
   );
 };
