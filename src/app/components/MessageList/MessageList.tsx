@@ -68,8 +68,11 @@ const MessageList: React.FC<MessageListProps> = ({
   return (
     <div
       ref={chatWindowRef}
-      className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl"
-      style={{ height: 'calc(100vh - 120px)' }}
+      className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl overscroll-none"
+      style={{ 
+        height: 'calc(100vh - 120px)',
+        WebkitOverflowScrolling: 'touch', // 启用弹性滚动
+      }}
     >
       {groupedMessages.map((group, groupIndex) => (
         <div key={group.question.id} className="relative">

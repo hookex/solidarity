@@ -101,12 +101,12 @@ export default function AIPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-gray-50">
-      <div className="pt-4 sm:pt-10 flex justify-center">
+    <div className="flex flex-col min-h-screen w-full bg-gray-50 overflow-hidden">
+      <div className="pt-4 sm:pt-10 flex justify-center flex-shrink-0">
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">AI搜索</h1>
       </div>
 
-      <div className="w-full flex justify-center p-2 sm:py-2 sm:px-4 lg:px-8">
+      <div className="w-full flex justify-center p-2 sm:py-2 sm:px-4 lg:px-8 flex-shrink-0">
         <div className="w-full max-w-3xl px-2 sm:px-0">
           <SearchBar
             value={input}
