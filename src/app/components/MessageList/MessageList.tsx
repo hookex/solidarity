@@ -28,6 +28,15 @@ const MessageList: React.FC<MessageListProps> = ({
     default: 1,
   };
 
+  // 添加加载动画组件
+  const LoadingDots = () => (
+    <span className="inline-flex ml-1">
+      <span className="animate-[loading_1.4s_ease-in-out_infinite] rounded-full h-1 w-1 bg-gray-500 mx-0.5"></span>
+      <span className="animate-[loading_1.4s_ease-in-out_0.2s_infinite] rounded-full h-1 w-1 bg-gray-500 mx-0.5"></span>
+      <span className="animate-[loading_1.4s_ease-in-out_0.4s_infinite] rounded-full h-1 w-1 bg-gray-500 mx-0.5"></span>
+    </span>
+  );
+
   // 按问题分组消息，并按时间顺序显示
   const groupedMessages = messages
     .reduce((groups, message) => {
@@ -66,8 +75,9 @@ const MessageList: React.FC<MessageListProps> = ({
 
           <div className="mb-8 pt-3">
             {/* 问题显示为简单文本 */}
-            <div className="text-sm sm:text-base text-gray-700 mb-3 px-1 font-medium">
+            <div className="text-sm sm:text-base text-gray-700 mb-3 px-1 font-medium flex items-center">
               {group.question.content}
+              {isLoading && groupIndex === 0 && <LoadingDots />}
             </div>
 
             {/* 回答卡片 */}
