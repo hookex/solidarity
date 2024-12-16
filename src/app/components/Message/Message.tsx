@@ -105,30 +105,39 @@ const Message: React.FC<MessageProps> = ({ role, content, isHighlighted = false,
               <ReactMarkdown
                 rehypePlugins={[rehypeHighlight]}
                 className="prose prose-sm sm:prose-base prose-slate max-w-none break-words leading-relaxed
-                  [&>*:last-child]:mb-0"
+                  [&>*:last-child]:mb-0 font-['PingFang_SC']"
                 components={{
                   // 调整标题间距和留白
                   h1: ({ children }) => (
-                    <h1 className="font-display text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900 tracking-tight">{children}</h1>
+                    <h1 className="font-['PingFang_SC'] text-lg sm:text-xl font-bold mb-2 sm:mb-3 text-gray-900 tracking-tight">
+                      {children}
+                    </h1>
                   ),
                   h2: ({ children }) => (
-                    <h2 className="font-display text-base sm:text-lg font-bold mb-1.5 sm:mb-2 text-gray-800 tracking-tight">{children}</h2>
+                    <h2 className="font-['PingFang_SC'] text-base sm:text-lg font-bold mb-1.5 sm:mb-2 text-gray-800 tracking-tight">
+                      {children}
+                    </h2>
                   ),
                   h3: ({ children }) => (
-                    <h3 className="font-display text-sm sm:text-base font-bold mb-1 sm:mb-1.5 text-gray-800 tracking-tight">{children}</h3>
+                    <h3 className="font-['PingFang_SC'] text-sm sm:text-base font-bold mb-1 sm:mb-1.5 text-gray-800 tracking-tight">
+                      {children}
+                    </h3>
                   ),
-                  // 减小段落间距和留白
                   p: ({ children }) => (
-                    <p className="text-[13px] sm:text-[14px] mb-1.5 sm:mb-2 text-gray-800 leading-relaxed tracking-tight">
+                    <p className="font-['PingFang_SC'] text-[13px] sm:text-[14px] mb-1.5 sm:mb-2 text-gray-800 leading-relaxed tracking-tight">
                       {children}
                     </p>
                   ),
                   // 优化列表间距
                   ul: ({ children }) => (
-                    <ul className="list-disc list-inside mb-1.5 sm:mb-2.5 space-y-1 text-[13px] sm:text-[14px] text-gray-800">{children}</ul>
+                    <ul className="font-['PingFang_SC'] list-disc list-inside mb-1.5 sm:mb-2.5 space-y-1 text-[13px] sm:text-[14px] text-gray-800">
+                      {children}
+                    </ul>
                   ),
                   ol: ({ children }) => (
-                    <ol className="list-decimal list-inside mb-1.5 sm:mb-2.5 space-y-1 text-[13px] sm:text-[14px] text-gray-800">{children}</ol>
+                    <ol className="font-['PingFang_SC'] list-decimal list-inside mb-1.5 sm:mb-2.5 space-y-1 text-[13px] sm:text-[14px] text-gray-800">
+                      {children}
+                    </ol>
                   ),
                   // 优化代码块
                   code: ({ inline, className, children, ...props }: CodeBlockProps) => {

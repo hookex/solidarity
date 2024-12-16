@@ -58,10 +58,11 @@ const MessageList: React.FC<MessageListProps> = ({
   return (
     <div
       ref={chatWindowRef}
-      className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl overscroll-none"
+      className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl overscroll-none touch-pan-y"
       style={{ 
         height: 'calc(100vh - 120px)',
         WebkitOverflowScrolling: 'touch',
+        overscrollBehavior: 'none',
       }}
     >
       {groupedMessages.map((group, groupIndex) => (

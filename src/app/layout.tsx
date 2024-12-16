@@ -16,7 +16,9 @@ export default function RootLayout({
 }) {
   return (
     <html lang="zh">
-      <body className={inter.className}>{children}</body>
+      <body className={`${inter.className} overscroll-none touch-pan-y`} style={{ overscrollBehavior: 'none' }}>
+        {children}
+      </body>
     </html>
   )
 }
