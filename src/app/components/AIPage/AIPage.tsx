@@ -24,8 +24,14 @@ export default function AIPage() {
 
   // 初始化 store
   useEffect(() => {
+    console.log('Initializing store...');
     initializeAISearchStore();
   }, []);
+
+  // 监听消息变化
+  useEffect(() => {
+    console.log('Messages updated:', messages);
+  }, [messages]);
 
   const handleSearch = async () => {
     const prompt = input.trim();

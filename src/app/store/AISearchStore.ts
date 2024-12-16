@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 /**
  * 消息数据类型定义
@@ -43,51 +44,58 @@ const CONTEXT_STORAGE_KEY = 'ai_chat_context';   // 聊天上下文存储键
 /**
  * 创建 AI 搜索状态管理 Store
  */
-export const useAISearchStore = create<AISearchState>((set, get) => ({
-  // 初始状态
-  messages: [],
-  sessionId: null,
-  isLoading: false,
-  highlightIndex: null,
+export const useAISearchStore = create<AISearchState>()(
+  devtools(
+    (set, get) => ({
+      // 初始状态
+      messages: [],
+      sessionId: null,
+      isLoading: false,
+      highlightIndex: null,
 
-  // 状态更新方法
-  setMessages: (messages) => {
-    set({ messages });
-    localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
-  },
-  
-  // 在消息列表头部添加新消息
-  addMessage: (message) => set((state) => {
-    const updatedMessages = [message, ...state.messages];
-    localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(updatedMessages));
-    return { messages: updatedMessages };
-  }),
-  
-  // 更新最新消息的内容（用于流式响应）
-  updateMessage: (id, updater) => set((state) => {
-    const updatedMessages = state.messages.map(msg =>
-      msg.id === id ? { ...msg, content: updater(msg.content) } : msg
-    );
-    localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(updatedMessages));
-    return { messages: updatedMessages };
-  }),
-  
-  setSessionId: (sessionId) => set({ sessionId }),
-  setIsLoading: (isLoading) => set({ isLoading }),
-  setHighlightIndex: (highlightIndex) => set({ highlightIndex }),
+      // 状态更新方法
+      setMessages: (messages) => {
+        set({ messages }, false, 'setMessages'); // 添加 action 名称
+        localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
+      },
+      
+      addMessage: (message) => set((state) => {
+        const updatedMessages = [message, ...state.messages];
+        localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(updatedMessages));
+        return { messages: updatedMessages };
+      }, false, 'addMessage'),
+      
+      updateMessage: (id, updater) => set((state) => {
+        const updatedMessages = state.messages.map(msg =>
+          msg.id === id ? { ...msg, content: updater(msg.content) } : msg
+        );
+        localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(updatedMessages));
+        return { messages: updatedMessages };
+      }, false, 'updateMessage'),
+      
+      setSessionId: (sessionId) => set({ sessionId }, false, 'setSessionId'),
+      setIsLoading: (isLoading) => set({ isLoading }, false, 'setIsLoading'),
+      setHighlightIndex: (highlightIndex) => set({ highlightIndex }, false, 'setHighlightIndex'),
 
-  // 添加订阅，监听消息变化
-  subscribe: () => {
-    useAISearchStore.subscribe(
-      (state) => state.messages,
-      (messages) => {
-        if (typeof window !== 'undefined') {
-          localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
-        }
-      }
-    );
-  },
-}));
+      subscribe: () => {
+        console.log('Setting up store subscription...');
+        return useAISearchStore.subscribe(
+          (state) => state.messages,
+          (messages) => {
+            console.log('Messages changed in store:', messages);
+            if (typeof window !== 'undefined') {
+              localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
+            }
+          }
+        );
+      },
+    }),
+    {
+      name: 'AI Search Store', // DevTools 中显示的 store 名称
+      enabled: process.env.NODE_ENV === 'development', // 仅在开发环境启用
+    }
+  )
+);
 
 /**
  * 初始化 Store
