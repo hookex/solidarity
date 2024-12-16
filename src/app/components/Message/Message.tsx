@@ -1,3 +1,8 @@
+/**
+ * 消息组件
+ * 用于显示用户问题和AI回答的消息卡片
+ */
+
 import React, { useState } from 'react';
 import ReactMarkdown from 'react-markdown';
 import rehypeHighlight from 'rehype-highlight';

@@ -1,3 +1,8 @@
+/**
+ * AI搜索状态管理存储
+ * 使用 Zustand 管理全局状态
+ */
+
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
 
@@ -9,10 +14,10 @@ export type MessageData = {
   role: 'user' | 'system';  // 消息角色：用户或系统
   content: string;     // 消息内容（Markdown格式）
   timestamp: string;   // 消息时间戳
-  modelId?: string; // 添加可选的模型标识
-  modelName?: string; // 添加模型名称
-  type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';
-  questionId?: number; // 添加关联的问题ID
+  modelId?: string;    // 模型标识
+  modelName?: string;  // 模型名称
+  type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';  // 消息类型
+  questionId?: number; // 关联的问题ID
 };
 
 /**
@@ -89,7 +94,7 @@ export const useAISearchStore = create<AISearchState>()(
     }),
     {
       name: 'AI Search Store', // DevTools 中显示的 store 名称
-      enabled: process.env.NODE_ENV === 'development', // ���在开发环境启用
+      enabled: process.env.NODE_ENV === 'development', // 在开发环境启用
     }
   )
 );

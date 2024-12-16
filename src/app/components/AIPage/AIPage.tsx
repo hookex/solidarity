@@ -1,3 +1,8 @@
+/**
+ * AI搜索页面组件
+ * 整个应用的主页面，包含搜索栏和消息列表
+ */
+
 'use client';
 
 import React, { useState, useEffect, useRef } from 'react';
@@ -8,18 +13,19 @@ import { AIService, generateId, getCurrentTimestamp } from '@/app/services/api';
 import DebugButtons from '@/app/components/DebugButtons/DebugButtons';
 
 export default function AIPage() {
-  const [input, setInput] = useState<string>('');
-  const chatWindowRef = useRef<HTMLDivElement>(null);
+  const [input, setInput] = useState<string>('');  // 输入框内容
+  const chatWindowRef = useRef<HTMLDivElement>(null);  // 聊天窗口引用
   
+  // 从store中获取状态和方法
   const { 
-    messages, 
-    sessionId, 
-    isLoading, 
-    highlightIndex,
-    addMessage,
-    updateMessage,
-    setIsLoading,
-    setHighlightIndex 
+    messages,          // 消息列表
+    sessionId,         // 会话ID
+    isLoading,         // 加载状态
+    highlightIndex,    // 高亮索引
+    addMessage,        // 添加消息方法
+    updateMessage,     // 更新消息方法
+    setIsLoading,      // 设置加载状态
+    setHighlightIndex  // 设置高亮索引
   } = useAISearchStore();
 
   // 初始化 store

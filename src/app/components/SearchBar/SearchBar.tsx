@@ -1,3 +1,8 @@
+/**
+ * 搜索栏组件
+ * 用于接收用户输入的问题
+ */
+
 import { useEffect, useState } from 'react'
 import { MagnifyingGlassIcon } from '@heroicons/react/24/solid'
 import { PaperAirplaneIcon } from '@heroicons/react/24/solid'

@@ -1,3 +1,8 @@
+/**
+ * 消息列表组件
+ * 用于显示所有问答对话
+ */
+
 import React, { useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import Message from '../Message/Message';
