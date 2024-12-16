@@ -30,17 +30,14 @@ const MessageList: React.FC<MessageListProps> = ({
 
   // 按问题分组消息，并按时间顺序显示
   const groupedMessages = messages
-    .slice() // 创建副本以避免修改原数组
-    .reverse() // 反转数组以保持最新消息在前
     .reduce((groups, message) => {
       if (message.role === 'user') {
-        groups.push({
+        groups.unshift({
           question: message,
           answers: []
         });
       } else if (message.role === 'system' && groups.length > 0) {
-        const lastGroup = groups[groups.length - 1];
-        lastGroup.answers.push(message);
+        groups[0].answers.push(message);
       }
       return groups;
     }, [] as { question: MessageData; answers: MessageData[] }[]);

@@ -55,12 +55,12 @@ export const useAISearchStore = create<AISearchState>()(
 
       // 状态更新方法
       setMessages: (messages) => {
-        set({ messages }, false, 'setMessages'); // 添加 action 名称
+        set({ messages }, false, 'setMessages');
         localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
       },
       
       addMessage: (message) => set((state) => {
-        const updatedMessages = [message, ...state.messages];
+        const updatedMessages = [...state.messages, message];
         localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(updatedMessages));
         return { messages: updatedMessages };
       }, false, 'addMessage'),
@@ -89,7 +89,7 @@ export const useAISearchStore = create<AISearchState>()(
     }),
     {
       name: 'AI Search Store', // DevTools 中显示的 store 名称
-      enabled: process.env.NODE_ENV === 'development', // 仅在开发环境启用
+      enabled: process.env.NODE_ENV === 'development', // ���在开发环境启用
     }
   )
 );
