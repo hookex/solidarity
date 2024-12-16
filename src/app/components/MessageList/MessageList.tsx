@@ -45,7 +45,7 @@ const MessageList: React.FC<MessageListProps> = ({
       return groups;
     }, [] as { question: MessageData; answers: MessageData[] }[]);
 
-  // 在组件中添加调试日志
+  // 添加调试日志
   console.log('Messages from store:', messages);
   console.log('Grouped messages:', groupedMessages);
 
