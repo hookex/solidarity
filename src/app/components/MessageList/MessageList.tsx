@@ -2,7 +2,6 @@ import React, { useEffect, useState } from 'react';
 import Masonry from 'react-masonry-css';
 import Message from '../Message/Message';
 import { MessageData } from '@/app/store/AISearchStore';
-import { useTransition, animated, config, useSpring } from '@react-spring/web';
 
 interface MessageListProps {
   messages: MessageData[];
@@ -29,38 +28,16 @@ const MessageList: React.FC<MessageListProps> = ({
     default: 1,
   };
 
-  const filteredMessages = messages.filter(item => 
-    item.role === 'system' && item.content && item.content.trim() !== ''
-  );
-
-  // 消息列表的过渡动画
-  const transitions = useTransition(filteredMessages, {
-    keys: item => item.id,
-    from: { opacity: 0, transform: 'scale(0.9)' },
-    enter: { opacity: 1, transform: 'scale(1)' },
-    leave: { opacity: 0, transform: 'scale(0.9)' },
-    config: config.gentle,
-    immediate: isLayoutReady,
-    initial: { opacity: 1, transform: 'scale(1)' },
-  });
-
-  // 加载动画
-  const loadingSpring = useSpring({
-    opacity: isLoading ? 1 : 0,
-    config: config.gentle,
-  });
-
-  // 按问题分组消息
+  // 按问题分组消息，并按时间顺序显示
   const groupedMessages = messages.reduce((groups, message) => {
     if (message.role === 'user') {
-      // 创建新的问题组
       groups.push({
         question: message,
         answers: []
       });
     } else if (message.role === 'system' && groups.length > 0) {
-      // 将回答添加到最近的问题组
-      groups[groups.length - 1].answers.push(message);
+      const lastGroup = groups[groups.length - 1];
+      lastGroup.answers.push(message);
     }
     return groups;
   }, [] as { question: MessageData; answers: MessageData[] }[]);
@@ -71,7 +48,7 @@ const MessageList: React.FC<MessageListProps> = ({
       className="p-2 sm:p-6 overflow-y-auto mx-auto w-full max-w-3xl overscroll-none"
       style={{ 
         height: 'calc(100vh - 120px)',
-        WebkitOverflowScrolling: 'touch', // 启用弹性滚动
+        WebkitOverflowScrolling: 'touch',
       }}
     >
       {groupedMessages.map((group, groupIndex) => (
@@ -84,7 +61,7 @@ const MessageList: React.FC<MessageListProps> = ({
           )}
 
           <div className="mb-8 pt-3">
-            {/* 问题 */}
+            {/* 问题显示为简单文本 */}
             <div className="text-sm sm:text-base text-gray-700 mb-3 px-1 font-medium">
               {group.question.content}
             </div>
@@ -95,37 +72,34 @@ const MessageList: React.FC<MessageListProps> = ({
               className="flex w-auto"
               columnClassName="bg-clip-padding"
             >
-              {group.answers.map((answer, index) => (
-                <animated.div
+              {group.answers.map((answer) => (
+                <div
                   key={answer.id}
-                  style={transitions[index]}
-                  data-index={index}
                   className="mb-2"
                 >
                   <div className={`rounded-lg shadow ${
-                    highlightIndex === index ? 'bg-blue-50/80' : 'bg-white border border-gray-200'
+                    highlightIndex === answer.id ? 'bg-blue-50/80' : 'bg-white border border-gray-200'
                   }`}>
                     <Message
                       role={answer.role}
                       content={answer.content}
-                      isHighlighted={highlightIndex === index}
+                      isHighlighted={highlightIndex === answer.id}
                       timestamp={answer.timestamp}
                       modelName={answer.modelName}
                       type={answer.type}
                     />
                   </div>
-                </animated.div>
+                </div>
               ))}
             </Masonry>
 
             {/* 加载状态 */}
             {isLoading && groupIndex === groupedMessages.length - 1 && (
-              <animated.div
-                style={loadingSpring}
+              <div
                 className="flex justify-center items-center text-gray-500 mt-2"
               >
                 <div className="loader">加载中...</div>
-              </animated.div>
+              </div>
             )}
           </div>
         </div>

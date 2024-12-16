@@ -5,8 +5,7 @@ import SearchBar from '@/app/components/SearchBar/SearchBar';
 import MessageList from '@/app/components/MessageList/MessageList';
 import { useAISearchStore, initializeAISearchStore } from '@/app/store/AISearchStore';
 import { AIService, generateId, getCurrentTimestamp } from '@/app/services/api';
-
-const CONTEXT_STORAGE_KEY = 'ai_chat_context';
+import DebugButtons from '@/app/components/DebugButtons/DebugButtons';
 
 export default function AIPage() {
   const [input, setInput] = useState<string>('');
@@ -27,13 +26,6 @@ export default function AIPage() {
   useEffect(() => {
     initializeAISearchStore();
   }, []);
-
-  // 更新本地存储
-  useEffect(() => {
-    if (typeof window !== 'undefined') {
-      localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
-    }
-  }, [messages]);
 
   const handleSearch = async () => {
     const prompt = input.trim();
@@ -125,6 +117,8 @@ export default function AIPage() {
           chatWindowRef={chatWindowRef}
         />
       </div>
+
+      <DebugButtons />
     </div>
   );
 }
