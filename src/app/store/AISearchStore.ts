@@ -79,15 +79,12 @@ export const useAISearchStore = create<AISearchState>()(
 
       subscribe: () => {
         console.log('Setting up store subscription...');
-        return useAISearchStore.subscribe(
-          (state) => state.messages,
-          (messages) => {
-            console.log('Messages changed in store:', messages);
-            if (typeof window !== 'undefined') {
-              localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(messages));
-            }
+        useAISearchStore.subscribe((state) => {
+          console.log('Messages changed in store:', state.messages);
+          if (typeof window !== 'undefined') {
+            localStorage.setItem(CONTEXT_STORAGE_KEY, JSON.stringify(state.messages));
           }
-        );
+        });
       },
     }),
     {
