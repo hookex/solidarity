@@ -61,3 +61,21 @@
     color: var(--primary-green-color);
 }
 
+.searchBarContainer {
+    position: fixed;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    max-width: 90%;
+    transition: all 0.3s ease-in-out;
+}
+
+.searchBarInitial {
+    top: 38.2vh;
+}
+
+.searchBarFixed {
+    top: 0;
+    transform: translateX(-50%);
+    padding-top: 20px;
+}

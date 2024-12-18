@@ -11,6 +11,7 @@ import MessageList from '@/app/components/MessageList/MessageList';
 import { useAISearchStore, initializeAISearchStore } from '@/app/store/AISearchStore';
 import { AIService, generateId, getCurrentTimestamp } from '@/app/services/api';
 import DebugButtons from '@/app/components/DebugButtons/DebugButtons';
+import styles from './index.module.css';
 
 export default function AIPage() {
   const [input, setInput] = useState<string>('');  // 输入框内容
@@ -105,32 +106,28 @@ export default function AIPage() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen w-full bg-gray-50 overflow-hidden">
-      <div className="pt-4 sm:pt-10 flex justify-center flex-shrink-0">
-        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800">AI搜索</h1>
-      </div>
-
-      <div className="w-full flex justify-center p-2 sm:py-2 sm:px-4 lg:px-8 flex-shrink-0">
-        <div className="w-full max-w-3xl px-2 sm:px-0">
-          <SearchBar
-            value={input}
-            onChange={setInput}
-            onSubmit={handleSearch}
-            onHistorySelect={setHighlightIndex}
-          />
-        </div>
-      </div>
-
-      <div className="flex-1 overflow-hidden">
-        <MessageList
-          messages={messages}
-          highlightIndex={highlightIndex}
-          isLoading={isLoading}
-          chatWindowRef={chatWindowRef}
+    <div className="relative min-h-screen w-full bg-gray-50">
+      <div className={`${styles.searchBarContainer} ${messages.length === 0 ? styles.searchBarInitial : styles.searchBarFixed}`}>
+        <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-4">AI搜索</h1>
+        <SearchBar
+          value={input}
+          onChange={setInput}
+          onSubmit={handleSearch}
+          onHistorySelect={setHighlightIndex}
         />
       </div>
+      
+      {messages.length > 0 && (
+        <div className="w-full max-w-3xl mx-auto pt-20 pb-4 px-4">
+          <MessageList
+            messages={messages}
+            highlightIndex={highlightIndex}
+            isLoading={isLoading}
+          />
+        </div>
+      )}
 
-      <DebugButtons />
+      {process.env.NODE_ENV === 'development' && <DebugButtons />}
     </div>
   );
 }
