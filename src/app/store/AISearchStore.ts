@@ -5,40 +5,29 @@
 
 import { create } from 'zustand';
 import { devtools } from 'zustand/middleware';
+import type { MessageWithStatus } from '@/app/api/messages/types';
 
 /**
  * 消息数据类型定义
  */
-export type MessageData = {
-  id: number;          // 消息唯一标识
-  role: 'user' | 'system';  // 消息角色：用户或系统
-  content: string;     // 消息内容（Markdown格式）
-  timestamp: string;   // 消息时间戳
-  modelId?: string;    // 模型标识
-  modelName?: string;  // 模型名称
-  type?: 'search_status' | 'thinking_status' | 'generating_status' | 'answer';  // 消息类型
-  questionId?: number; // 关联的问题ID
-};
+export type MessageData = MessageWithStatus;
 
 /**
  * AI搜索状态接口定义
  */
 interface AISearchState {
-  // 状态
   messages: MessageData[];      // 消息历史记录
   sessionId: string | null;     // 会话ID
   isLoading: boolean;          // 加载状态
   highlightIndex: number | null; // 高亮消息索引
   
   // 操作方法
-  setMessages: (messages: MessageData[]) => void;       // 设置整个消息列表
-  addMessage: (message: MessageData) => void;           // 添加单条消息
+  setMessages: (messages: MessageData[]) => void;
+  addMessage: (message: MessageData) => void;
   updateMessage: (id: number, updater: (prevContent: string) => string) => void;
-  setSessionId: (sessionId: string) => void;           // 设置会话ID
-  setIsLoading: (isLoading: boolean) => void;          // 设置加载状态
-  setHighlightIndex: (index: number | null) => void;   // 设置高亮消息索引
-
-  // 添加订阅，监听消息变化
+  setSessionId: (sessionId: string) => void;
+  setIsLoading: (isLoading: boolean) => void;
+  setHighlightIndex: (index: number | null) => void;
   subscribe: () => void;
 }
 

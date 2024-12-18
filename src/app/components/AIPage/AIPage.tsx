@@ -12,6 +12,8 @@ import { useAISearchStore, initializeAISearchStore } from '@/app/store/AISearchS
 import { AIService, generateId, getCurrentTimestamp } from '@/app/services/api';
 import DebugButtons from '@/app/components/DebugButtons/DebugButtons';
 import styles from './index.module.css';
+import { messagesApi } from '@/app/api/messages/client';
+import type { Message, MessageWithStatus } from '@/app/api/messages/types';
 
 export default function AIPage() {
   const [input, setInput] = useState<string>('');  // 输入框内容
@@ -47,18 +49,6 @@ export default function AIPage() {
     setInput('');
     setIsLoading(true);
 
-    // 添加用户问题
-    const questionId = generateId();
-    addMessage({
-      id: questionId,
-      role: 'user',
-      content: prompt,
-      timestamp: getCurrentTimestamp(),
-    });
-
-    // 为每个模型添加一个空的系统消息
-    const modelMessages = new Map();
-
     try {
       const result = await AIService.searchStream(
         {
@@ -66,26 +56,11 @@ export default function AIPage() {
           prompt,
           context: messages,
         },
-        (modelId, chunk, modelName) => {
-          // 调试日志
-          console.log('Received message:', { modelId, chunk, modelName });
-          
-          if (!modelMessages.has(modelId)) {
-            const messageId = generateId();
-            modelMessages.set(modelId, messageId);
-            addMessage({
-              id: messageId,
-              role: 'system',
-              content: '',
-              timestamp: getCurrentTimestamp(),
-              modelId,
-              modelName,
-              questionId, // 添加关联的问题ID
-            });
+        async (data) => {
+          if (data.messageId) {
+            // 使用后端返回的消息ID更新消息
+            updateMessage(data.messageId, () => data.content || '');
           }
-          
-          const messageId = modelMessages.get(modelId);
-          updateMessage(messageId, (prevContent) => prevContent + chunk);
         }
       );
 
@@ -94,12 +69,6 @@ export default function AIPage() {
       }
     } catch (error) {
       console.error('Error fetching data:', error);
-      addMessage({
-        id: generateId(),
-        role: 'system',
-        content: '发生错误：无法获取数据。',
-        timestamp: getCurrentTimestamp(),
-      });
     } finally {
       setIsLoading(false);
     }

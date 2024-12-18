@@ -6,7 +6,8 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start -H 0.0.0.0",
-    "lint": "next lint"
+    "lint": "next lint",
+    "db:init": "ts-node scripts/init-db.ts"
   },
   "dependencies": {
     "@arco-design/web-react": "^2.65.0",
@@ -14,11 +15,15 @@
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
     "@react-spring/web": "^9.7.5",
+    "@types/bcryptjs": "^2.4.6",
     "@types/tailwindcss": "latest",
     "@vercel/analytics": "^1.4.1",
     "@vercel/speed-insights": "^1.1.0",
+    "bcryptjs": "^2.4.3",
     "eslint-define-config": "^2.1.0",
     "highlight.js": "^11.10.0",
+    "install": "^0.13.0",
+    "mysql2": "^3.11.5",
     "next": "15.0.3",
     "openai": "^4.76.1",
     "react": "^18.3.1",
@@ -27,6 +32,7 @@
     "react-masonry-css": "^1.0.16",
     "react-use": "^17.5.1",
     "rehype-highlight": "^7.0.1",
+    "sequelize": "^6.37.5",
     "three": "^0.170.0",
     "use-debounce": "^10.0.4",
     "uuid": "^11.0.3",

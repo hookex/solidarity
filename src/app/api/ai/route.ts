@@ -1,4 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
+import { messagesApi } from '../messages/client';
+import { MessageWithStatus } from '../messages/types';
+import { generateId, getCurrentTimestamp } from '@/app/services/api';
 
 // 定义可用的模型配置
 const AI_MODELS = {
@@ -34,11 +37,28 @@ async function createModelStream(
 	prompt: string,
 	sessionId: string,
 	modelConfig: typeof AI_MODELS[keyof typeof AI_MODELS],
-	controller: ReadableStreamDefaultController
+	controller: ReadableStreamDefaultController,
+	questionId: number
 ) {
 	const encoder = new TextEncoder();
 	
 	try {
+		// 创建系统消息
+		const messageId = generateId();
+		const systemMessage: Omit<MessageWithStatus, 'id'> = {
+			role: 'system' as const,
+			content: '',
+			timestamp: getCurrentTimestamp(),
+			modelId: modelConfig.model,
+			modelName: modelConfig.name,
+			questionId,
+			sessionId,
+			type: 'answer',
+		};
+
+		// 保存初始系统消息
+		await messagesApi.create(systemMessage);
+
 		const context = contextMap.get(`${sessionId}-${modelConfig.model}`) || [
 			{ role: 'system', content: modelConfig.systemPrompt },
 		];
@@ -116,10 +136,14 @@ async function createModelStream(
 			
 			const content = data.choices?.[0]?.message?.content || '';
 			if (content) {
+				// 更新消息内容
+				await messagesApi.update(messageId, content);
+				
 				const message = {
 					model: modelConfig.model,
 					modelName: modelConfig.name,
 					content,
+					messageId, // 返回消息ID给前端
 					references: data.references,
 					type: 'answer'
 				};
@@ -157,7 +181,7 @@ async function createModelStream(
 					const content = line.slice(6).trim();
 					console.log(`${modelConfig.name} - Processing content:`, content);
 					
-					// 检查是否是结束标记
+					// 检查是否��结束标记
 					if (content === '[DONE]') {
 						console.log(`${modelConfig.name} - Received DONE signal`);
 						continue;
@@ -212,10 +236,21 @@ export async function POST(request: NextRequest) {
 		return new NextResponse('Missing sessionId', { status: 400 });
 	}
 
+	// 创建用户问题消息
+	const questionId = generateId();
+	const userMessage: Omit<MessageWithStatus, 'id'> = {
+		role: 'user' as const,
+		content: prompt,
+		timestamp: getCurrentTimestamp(),
+		sessionId,
+	};
+
+	await messagesApi.create(userMessage);
+
 	const stream = new ReadableStream({
 		async start(controller) {
 			const modelPromises = Object.values(AI_MODELS).map(modelConfig =>
-				createModelStream(prompt, sessionId, modelConfig, controller)
+				createModelStream(prompt, sessionId, modelConfig, controller, questionId)
 			);
 
 			await Promise.all(modelPromises);
