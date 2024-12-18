@@ -118,7 +118,7 @@ export default function AIPage() {
       </div>
       
       {messages.length > 0 && (
-        <div className="w-full max-w-3xl mx-auto pt-20 pb-4 px-4">
+        <div className="w-full max-w-3xl mx-auto px-4" style={{ paddingTop: '150px' }}>
           <MessageList
             messages={messages}
             highlightIndex={highlightIndex}

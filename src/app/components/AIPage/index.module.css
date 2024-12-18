@@ -68,6 +68,9 @@
     width: 600px;
     max-width: 90%;
     transition: all 0.3s ease-in-out;
+    background-color: #f8fafc;  /* 添加背景色 */
+    padding: 1rem;  /* 添加内边距 */
+    border-radius: 0.5rem;  /* 添加圆角 */
 }
 
 .searchBarInitial {
