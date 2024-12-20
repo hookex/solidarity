@@ -14,7 +14,6 @@
     "@chatui/core": "^2.4.2",
     "@headlessui/react": "^2.2.0",
     "@heroicons/react": "^2.2.0",
->>>>>>> oriin/main
     "@react-spring/web": "^9.7.5",
     "@types/tailwindcss": "latest",
     "@vercel/analytics": "^1.4.1",
