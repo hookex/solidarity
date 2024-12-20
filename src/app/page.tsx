@@ -6,9 +6,8 @@ import {useSpring, animated} from '@react-spring/web';
 import {useAsync} from 'react-use';
 import { useDebounce } from 'use-debounce';
 
-import FullScreenLayout from "@/app/components/fullScreenLayout";
-import Snowfall from "@/app/components/snow-fall";
-import LoadingPage from "@/app/components/loading-page";
+import FullScreenLayout from "@/app/components/FullScreenLayout/FullScreenLayout";
+import AIPage from "@/app/components/AIPage/AIPage";
 import browserClient  from '@apmplus/web'// 配置参数
 
 browserClient('init', {
