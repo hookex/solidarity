@@ -9,6 +9,14 @@ import { useDebounce } from 'use-debounce';
 import FullScreenLayout from "@/app/components/full-screen-layout";
 import Snowfall from "@/app/components/snow-fall";
 import LoadingPage from "@/app/components/loading-page";
+import browserClient  from '@apmplus/web'// 配置参数
+
+browserClient('init', {
+ aid: 683462, // 应用唯一标识，必填参数
+ token:'d3c03edc80dc458a8e6824b451dbb387' // 应用 token,必填参数
+})
+// 开启上报
+browserClient('start')
 
 type Data = { message: string };
 
