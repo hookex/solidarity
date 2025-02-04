@@ -106,7 +106,7 @@ export default function AIPage() {
   };
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-50">
+    <div className="relative w-full bg-gray-50">
       <div className={`${styles.searchBarContainer} ${messages.length === 0 ? styles.searchBarInitial : styles.searchBarFixed}`}>
         <h1 className="text-2xl sm:text-3xl font-bold text-gray-800 text-center mb-4">AI搜索</h1>
         <SearchBar
@@ -118,7 +118,7 @@ export default function AIPage() {
       </div>
       
       {messages.length > 0 && (
-        <div className="w-full max-w-3xl mx-auto px-4" style={{ paddingTop: '150px' }}>
+        <div className="w-full max-w-3xl mx-auto px-4 pb-12" style={{ paddingTop: '150px' }}>
           <MessageList
             messages={messages}
             highlightIndex={highlightIndex}
