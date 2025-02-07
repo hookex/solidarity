@@ -22,6 +22,13 @@ const AI_MODELS = {
 		name: '智谱 AI',
 		apiPath: '/chat/completions',
 		stream: true
+	},
+	deepseekV3: {
+		model: 'ep-20250207210253-jqmhd',
+		systemPrompt: '你是 DeepSeek V3。回答限140字内，不确定就说不知道，别啰嗦，少废话。重要信息标注来源。',
+		name: 'DeepSeek V3',
+		apiPath: '/chat/completions',
+		stream: true
 	}
 };
 
